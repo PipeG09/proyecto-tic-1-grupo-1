@@ -112,14 +112,15 @@
 
 <div class="login-container">
     <h2>Iniciar Sesión</h2>
-    <form>
+    <!-- Formulario actualizado para enviar datos al backend -->
+    <form th:action="@{/login}" method="post">
         <div class="input-group">
             <i class="fas fa-user"></i>
-            <input type="text" placeholder="Usuario" required>
+            <input type="text" name="username" placeholder="Usuario" required>
         </div>
         <div class="input-group">
             <i class="fas fa-lock"></i>
-            <input type="password" placeholder="Contraseña" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
         </div>
         <button class="btn" type="submit">Ingresar</button>
     </form>
@@ -127,7 +128,7 @@
         <a href="#">¿Olvidaste tu contraseña?</a>
     </div>
     <div class="register">
-        <a href="#">¿No tenés usuario? Registrate</a>
+        <a th:href="@{/register}">¿No tenés usuario? Registrate</a>
     </div>
 </div>
 

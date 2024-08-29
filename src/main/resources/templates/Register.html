@@ -17,7 +17,7 @@
             color: #14110f;
         }
 
-        .register-container {
+        .login-container {
             background: rgba(255, 255, 255, 0.1);
             padding: 40px;
             border-radius: 10px;
@@ -27,7 +27,7 @@
             width: 350px;
         }
 
-        .register-container h2 {
+        .login-container h2 {
             margin-bottom: 30px;
             font-weight: 300;
         }
@@ -79,17 +79,31 @@
             background-color: #423f3b;
         }
 
-        .login-link {
+        .forgot-password {
             margin-top: 20px;
             font-size: 14px;
         }
 
-        .login-link a {
+        .forgot-password a {
             color: #14110f;
             text-decoration: none;
         }
 
-        .login-link a:hover {
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .register {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .register a {
+            color: #14110f;
+            text-decoration: none;
+        }
+
+        .register a:hover {
             text-decoration: underline;
         }
 
@@ -104,34 +118,35 @@
 </head>
 <body>
 
-<div class="register-container">
+<div class="login-container">
     <h2>Registrarse</h2>
-    <form id="registerForm">
+    <!-- Formulario actualizado para enviar datos al backend -->
+    <form id="registerForm" th:action="@{/register}" method="post">
         <div class="input-group">
             <i class="fas fa-user"></i>
-            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
         </div>
         <div class="input-group">
             <i class="fas fa-user"></i>
-            <input type="text" id="apellido" placeholder="Apellido" required>
+            <input type="text" id="apellido" name="apellido" placeholder="Apellido" required>
         </div>
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="email" id="email" name="email" placeholder="Correo Electrónico" required>
         </div>
         <div class="input-group">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="Contraseña" required>
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
         </div>
         <div class="input-group">
             <i class="fas fa-lock"></i>
-            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" required>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Repetir Contraseña" required>
         </div>
         <div class="error-message" id="errorMessage">Las contraseñas no coinciden</div>
         <button class="btn" type="submit">Registrarse</button>
     </form>
     <div class="login-link">
-        <a href="#">¿Ya tienes una cuenta? Inicia sesión</a>
+        <a th:href="@{/login}">¿Ya tienes una cuenta? Inicia sesión</a>
     </div>
 </div>
 

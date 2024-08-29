@@ -1,10 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .header {
+            background-color: #34312d;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background-color: #34312d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: #423f3b;
+        }
+    </style>
 </head>
 <body>
+
+<div class="header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="container">
+    <div class="welcome-message">
+        Bienvenido, <span th:text="${#httpServletRequest.remoteUser}">Usuario</span>!
+    </div>
+    <p>Has iniciado sesión exitosamente. Este es tu dashboard donde puedes acceder a las funcionalidades de la aplicación.</p>
+
+    <a class="logout-btn" th:href="@{/logout}">Cerrar sesión</a>
+</div>
 
 </body>
 </html>
