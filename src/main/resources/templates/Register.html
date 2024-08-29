@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: rgb(252, 252, 247);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #14110f;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 350px;
+        }
+
+        .register-container h2 {
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 80%;
+            padding: 15px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(217, 197, 178, 0.2);
+            color: #14110f;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .input-group input:focus {
+            background: rgba(217, 197, 178, 0.4);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            background-color: #34312d;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #423f3b;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #14110f;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 1px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h2>Registrarse</h2>
+    <form id="registerForm">
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="nombre" placeholder="Nombre" required>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="apellido" placeholder="Apellido" required>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Contraseña" required>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirmPassword" placeholder="Repetir Contraseña" required>
+        </div>
+        <div class="error-message" id="errorMessage">Las contraseñas no coinciden</div>
+        <button class="btn" type="submit">Registrarse</button>
+    </form>
+    <div class="login-link">
+        <a href="#">¿Ya tienes una cuenta? Inicia sesión</a>
+    </div>
+</div>
+
+<!-- FontAwesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const errorMessage = document.getElementById('errorMessage');
+
+        if (password !== confirmPassword) {
+            event.preventDefault(); // Prevenir el envío del formulario
+            errorMessage.style.display = 'block'; // Mostrar mensaje de error
+        } else {
+            errorMessage.style.display = 'none'; // Ocultar mensaje de error si las contraseñas coinciden
+        }
+    });
+</script>
+
+</body>
+</html>
