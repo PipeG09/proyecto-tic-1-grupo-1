@@ -14,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
@@ -29,24 +31,26 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/register", "/login").permitAll() // Permitir acceso sin autenticación a las páginas de registro y login
-                        .requestMatchers("/dashboard").authenticated() // Requiere autenticación para acceder al dashboard
+                        .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll() // Asegúrate de permitir acceso a /login y /register sin autenticación
+                        .anyRequest().authenticated() // Cualquier otra ruta requiere autenticación
                 )
                 .formLogin(login -> login
-                        .loginPage("/login") // Página de inicio de sesión personalizada
-                        .defaultSuccessUrl("/dashboard") // Redirigir al dashboard después de un login exitoso
+                        .loginPage("/login") // Página personalizada de inicio de sesión
+                        .defaultSuccessUrl("/dashboard", true) // Redirige al dashboard después del login exitoso
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout") // Redirigir a la página de login después de cerrar sesión
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
 
         return http.build();
     }
+
 }
