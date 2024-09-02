@@ -1,34 +1,32 @@
 package org.example.proyectotic1grupo1.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false, unique = true)
+    // @Column(unique = true)
     private String username;
-
-    @Column(nullable = false)
     private String password;
+    private String fullname;
 
-    @Column(nullable = false)
-    private String nombre;
+    public User() {
 
-    @Column(nullable = false)
-    private String apellido;
+    }
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false)
-    private String role = "USER";
-
-    // Getters y setters
+    public User(String username, String password, String fullname) {
+        super();
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+    }
 
     public Long getId() {
         return id;
@@ -54,35 +52,17 @@ public class User {
         this.password = password;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getApellido() {
-        return apellido;
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullname=" + fullname + "]";
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
 }
