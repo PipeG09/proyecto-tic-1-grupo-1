@@ -1,83 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registration</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: rgb(252, 252, 247);
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background-color: #f4f4f4;
+      color: #14110f;
     }
 
-    .form-container {
-      background-color: #fff;
-      width: 400px;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-      color: #5e057e;
+    .login-container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       text-align: center;
-      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      width: 350px;
     }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #5e057e;
+    .login-container h2 {
+      margin-bottom: 30px;
+      font-weight: 300;
     }
 
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
     }
 
-    button {
-      background-color: #5e057e;
-      color: #fff;
-      padding: 10px 20px;
+    .input-group input {
+      width: 80%;
+      padding: 15px;
+      padding-left: 45px;
       border: none;
-      border-radius: 4px;
+      border-radius: 25px;
+      background: rgba(217, 197, 178, 0.2);
+      color: #14110f;
+      font-size: 16px;
+      outline: none;
+      transition: background 0.3s;
+    }
+
+    .input-group input:focus {
+      background: rgba(217, 197, 178, 0.4);
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .btn {
+      background-color: #34312d;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 25px;
       cursor: pointer;
-      font-weight: bold;
+      width: 100%;
+      font-size: 16px;
       transition: background-color 0.3s;
     }
 
-    button:hover {
-      background-color: #299d00;
+    .btn:hover {
+      background-color: #423f3b;
     }
 
-    .form-footer {
-      text-align: center;
+    .forgot-password {
       margin-top: 20px;
-      color: #888;
+      font-size: 14px;
     }
 
-    .success-message {
-      background-color: #5e057e;
-      color: #fff;
-      padding: 10px;
-      border-radius: 3px;
-      text-align: center;
+    .forgot-password a {
+      color: #14110f;
+      text-decoration: none;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    .register {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .register a {
+      color: #14110f;
+      text-decoration: none;
+    }
+
+    .register a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 1px;
+      margin-bottom: 10px;
+      display: none;
     }
   </style>
 </head>
 
 <body>
-<div class="form-container">
+<div class="login-container">
+  <h2>Registration</h2>
 
   <div th:if="${param.success}">
     <div class="success-message">
@@ -85,27 +128,28 @@
     </div>
   </div>
 
-  <h2>Registration</h2>
   <form th:action="@{/register}" method="post" role="form" th:object="${user}">
-    <label for="fullname">FullName:</label>
-    <input th:field="*{fullname}" type="text" id="fullname" name="fullname" placeholder="Enter your FullName"
-           required>
-
-    <label for="username">Username:</label>
-    <input th:field="*{username}" type="text" id="username" name="username" placeholder="Enter your Username"
-           required>
-
-    <label for="password">Password:</label>
-    <input th:field="*{password}" type="password" id="password" name="password"
-           placeholder="Enter your Password" required>
-
-    <button type="submit">Register</button>
+    <div class="input-group">
+      <label for="fullname">FullName:</label>
+      <input th:field="*{fullname}" type="text" id="fullname" name="fullname" placeholder="Enter your FullName" required>
+    </div>
+    <div class="input-group">
+      <label for="username">Username:</label>
+      <input th:field="*{username}" type="text" id="username" name="username" placeholder="Enter your Username" required>
+    </div>
+    <div class="input-group">
+      <label for="password">Password:</label>
+      <input th:field="*{password}" type="password" id="password" name="password" placeholder="Enter your Password" required>
+    </div>
+    <button type="submit" class="btn">Register</button>
   </form>
+
   <div>
-    <span th:if="${Userexist}" style="color: red;">Username is Taken</span>
+    <span th:if="${Userexist}" class="error-message">Username is Taken</span>
   </div>
-  <div>
-    <span class="form-footer">Already have an account? <a th:href="@{/login1}">Login</a>here.</span>
+
+  <div class="register">
+    <a th:href="@{/login1}">Already have an account? Login here.</a>
   </div>
 </div>
 </body>

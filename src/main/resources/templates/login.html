@@ -1,112 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: rgb(252, 252, 247);
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
+            color: #14110f;
         }
 
-        .form-container {
-            background-color: #fff;
-            width: 400px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #5e057e;
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             text-align: center;
-            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            width: 350px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #5e057e;
+        .login-container h2 {
+            margin-bottom: 30px;
+            font-weight: 300;
         }
 
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
         }
 
-        button {
-            background-color: #5e057e;
-            color: #fff;
-            padding: 10px 20px;
+        .input-group input {
+            width: 80%;
+            padding: 15px;
+            padding-left: 45px;
             border: none;
-            border-radius: 4px;
+            border-radius: 25px;
+            background: rgba(217, 197, 178, 0.2);
+            color: #14110f;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .input-group input:focus {
+            background: rgba(217, 197, 178, 0.4);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            background-color: #34312d;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: bold;
+            width: 100%;
+            font-size: 16px;
             transition: background-color 0.3s;
         }
 
-        button:hover {
-            background-color: #299d00;
+        .btn:hover {
+            background-color: #423f3b;
         }
 
-        .form-footer {
-            text-align: center;
+        .forgot-password {
             margin-top: 20px;
-            color: #888;
+            font-size: 14px;
         }
 
-        .error-message,
-        .logout-message {
-            background-color: #5e057e;
-            color: #fff;
-            padding: 10px;
-            border-radius: 3px;
-            text-align: center;
+        .forgot-password a {
+            color: #14110f;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .register {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .register a {
+            color: #14110f;
+            text-decoration: none;
+        }
+
+        .register a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="form-container">
+<div class="login-container">
 
-        <div th:if="${param.error}">
-            <div class="error-message">
-                <p>Invalid Username or Password</p>
-            </div>
+    <div th:if="${param.error}">
+        <div class="error-message">
+            <p>Invalid Username or Password</p>
         </div>
+    </div>
 
-        <div th:if="${param.logout}">
-            <div class="logout-message">
-                <p>Logout Successful!</p>
-            </div>
+    <div th:if="${param.logout}">
+        <div class="logout-message">
+            <p>Logout Successful!</p>
         </div>
+    </div>
 
-        <h2>Login</h2>
-        <form th:action="@{/login}" method="post" role="form" th:object="${user}">
-
+    <h2>Login</h2>
+    <form th:action="@{/login}" method="post" role="form" th:object="${user}">
+        <div class="input-group">
             <label for="username">Username:</label>
-            <input th:field="*{username}" type="text" id="username" name="username"
-                   placeholder="Enter your Username" required>
-
+            <input th:field="*{username}" type="text" id="username" name="username" placeholder="Enter your Username" required>
+        </div>
+        <div class="input-group">
             <label for="password">Password:</label>
-            <input th:field="*{password}" type="password" id="password" name="password"
-                   placeholder="Enter your Password" required>
-
-            <button type="submit">Login</button>
-        </form>
-        <p class="form-footer">Don't have an account? <a th:href="@{/register}">Register</a>here.</p>
+            <input th:field="*{password}" type="password" id="password" name="password" placeholder="Enter your Password" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <div class="register">
+        <a th:href="@{/register}">Don't have an account? Register here.</a>
     </div>
 </div>
 </body>
