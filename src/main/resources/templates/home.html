@@ -6,21 +6,33 @@
   <title>Home Page</title>
   <style>
     body {
-      background-color: #f5f5f5;
       margin: 0;
       padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: rgb(252, 252, 247);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #14110f;
     }
 
     .dashboard {
-      background-color: #5e057e;
-      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
       padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       text-align: center;
+      backdrop-filter: blur(10px);
+      width: 350px;
+      color: #fff;
     }
 
     .dashboard_title {
       font-size: 24px;
       margin-top: 0;
+      font-weight: 300;
+      color: #151716;
     }
 
     .dashboard_user {
@@ -29,24 +41,33 @@
 
     .dashboard_user_name {
       font-size: 18px;
-      color: #c299d0;
+      color: #151716;
     }
 
     .span-text {
       text-align: right;
-      color: black;
+      color: white;
+    }
+
+    .span-text a {
+      color: #151716;
+      text-decoration: none;
+    }
+
+    .span-text a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
 <div class="dashboard">
-  <h1 class="dashboard_title">Welcome to the Dashboard </h1>
+  <h1 class="dashboard_title">Welcome to the Dashboard</h1>
   <div class="dashboard_user">
     <h2 th:text="${userdetail.fullname}" class="dashboard_user_name"></h2>
   </div>
   <div class="span-text">
-    <span sec:authorize="isAuthenticated" style="color: white;"><a th:href="@{/logout}">Logout</a></span>
+    <span sec:authorize="isAuthenticated"><a th:href="@{/logout}">Logout</a></span>
   </div>
 </div>
 
