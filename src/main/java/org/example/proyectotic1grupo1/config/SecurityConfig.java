@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/home").permitAll()
+                        .requestMatchers("/index").permitAll() // Permitir acceso a /index sin autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
