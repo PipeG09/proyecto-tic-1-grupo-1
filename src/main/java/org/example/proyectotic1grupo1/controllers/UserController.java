@@ -28,12 +28,19 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/home")
-    public String home(Model model, Principal principal) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
-        model.addAttribute("userdetail", userDetails);
-        return "home";
+
+    @GetMapping("/index")
+    public String index(Model model, Principal principal) {
+        if (principal != null) {
+            System.out.println("Usuario autenticado: " + principal.getName());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
+            model.addAttribute("username", principal.getName()); // Pasamos el nombre de usuario directamente
+        } else {
+            System.out.println("Principal es null, el usuario no está autenticado.");
+        }
+        return "index";
     }
+
 
     @GetMapping("/login")
     public String login(Model model, UserDto userDto) {

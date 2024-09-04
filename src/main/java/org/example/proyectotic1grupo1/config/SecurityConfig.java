@@ -31,19 +31,20 @@ public class SecurityConfig {
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/index").permitAll() // Permitir acceso a /index sin autenticación
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/home", true)
+                        .defaultSuccessUrl("/index", true)
                         .permitAll()
                 )
                 .logout((logout) -> logout
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/index")
                         .permitAll()
                 );
 

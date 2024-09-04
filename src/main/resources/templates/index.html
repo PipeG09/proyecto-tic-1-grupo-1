@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cine XYZ - Página de Inicio</title>
+    <title>Cine TIC - Página de Inicio</title>
     <link rel="stylesheet" href="/css/styles.css">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -19,17 +19,32 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Inicio</a>
+                <a class="nav-link" th:href="@{/index}">Inicio</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Cartelera</a>
+                <a class="nav-link" th:href="@{/cartelera}">Cartelera</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contacto</a>
+                <a class="nav-link" th:href="@{/contact}">Contacto</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/logout}">Cerrar Sesion</a>
+            <li class="nav-item" th:if="${username != null}">
+                <a class="nav-link" th:href="@{/profile}">
+                    <span th:text="${username}"></span>
+                </a>
             </li>
+            <li class="nav-item" th:if="${username != null}">
+                <a class="nav-link" th:href="@{/logout}">Cerrar Sesión</a>
+            </li>
+            <li class="nav-item" th:if="${username == null}">
+                <a class="nav-link" th:href="@{/register}">Registrarse</a>
+            </li>
+            <li class="nav-item" th:if="${username == null}">
+                <a class="nav-link" th:href="@{/login}">Iniciar Sesión</a>
+            </li>
+
+
+
+
         </ul>
     </div>
 </nav>
