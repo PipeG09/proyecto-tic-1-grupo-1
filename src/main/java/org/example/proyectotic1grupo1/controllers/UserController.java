@@ -29,6 +29,13 @@ public class UserController {
     }
 
 
+    @GetMapping("/")
+    public String redirectToIndex() {
+        return "redirect:/index";  // Redirige a /index
+    }
+
+
+
     @GetMapping("/index")
     public String index(Model model, Principal principal) {
         if (principal != null) {
