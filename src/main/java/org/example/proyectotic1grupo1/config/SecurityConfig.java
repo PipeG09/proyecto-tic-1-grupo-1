@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/register").permitAll()
+                        .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/index").permitAll() // Permitir acceso a /index sin autenticación

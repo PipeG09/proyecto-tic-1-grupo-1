@@ -2,7 +2,10 @@ package org.example.proyectotic1grupo1.config;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.example.proyectotic1grupo1.models.Role;
 import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,11 +33,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Username or Password not found");
         }
-        return new CustomUserDetails(user.getUsername(), user.getPassword(), authorities(), user.getFullname());
+
+        // Aquí cargamos los roles del usuario y los convertimos a authorities
+        return new CustomUserDetails(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()), user.getFullname());
     }
 
-    public Collection<? extends GrantedAuthority> authorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("USER"));
-    }
 
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
 }

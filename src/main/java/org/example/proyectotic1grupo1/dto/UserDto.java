@@ -5,12 +5,15 @@ public class UserDto {
     private String username;
     private String password;
     private String fullname;
+    private Boolean isAdmin; // Asegúrate de tener este campo
 
+    // Actualiza el constructor para incluir isAdmin
     public UserDto(String username, String password, String fullname) {
         super();
         this.username = username;
         this.password = password;
         this.fullname = fullname;
+        this.isAdmin = false; // Asigna isAdmin
     }
 
     public String getUsername() {
@@ -37,8 +40,18 @@ public class UserDto {
         this.fullname = fullname;
     }
 
+    // Métodos get y set para isAdmin
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
+    // Actualiza el toString para incluir isAdmin
     @Override
     public String toString() {
-        return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + "]";
+        return "UserDto [username=" + username + ", password=" + password + ", fullname=" + fullname + ", isAdmin=" + isAdmin + "]";
     }
 }
