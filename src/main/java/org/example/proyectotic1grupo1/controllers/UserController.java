@@ -38,6 +38,11 @@ public class UserController {
         return "redirect:/index";  // Redirige a /index
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
+
 
 
     @GetMapping("/index")
@@ -66,10 +71,8 @@ public class UserController {
         return "register";
     }
 
-    @GetMapping("/users")
-    public String getAllUsers(Model model, Principal principal) {
-        List<User> users = userServiceImpl.findAll();
-        model.addAttribute("users", users);
+    @GetMapping("users")
+    public String users() {
         return "users";
     }
 

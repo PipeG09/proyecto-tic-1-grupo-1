@@ -28,19 +28,15 @@
     <tr>
         <th>ID</th>
         <th>Nombre de Usuario</th>
-        <th>Email</th>
         <th>Nombre Completo</th>
     </tr>
     </thead>
-    <tbody>
-    <!-- Iterar sobre la lista de usuarios y mostrar sus datos -->
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.fullName}"></td>
-    </tr>
+    <tbody id="userTableBody">
+    <!-- El cuerpo de la tabla será llenado por JavaScript -->
     </tbody>
 </table>
+
+<!-- Incluir el archivo JavaScript -->
+<script src="/js/userTable.js"></script>
 </body>
 </html>
