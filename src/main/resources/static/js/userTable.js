@@ -23,6 +23,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 fullNameCell.textContent = user.fullname;
                 row.appendChild(fullNameCell);
 
+                // Crear la celda de roles
+                const roleCell = document.createElement('td');
+                const roles = user.roles.map(role => role.name).join(', '); // Asume que cada rol tiene una propiedad "name"
+                roleCell.textContent = roles.includes('ADMIN') ? 'ADMIN' : 'USER'; // Si tiene rol ADMIN, se mostrará ADMIN, de lo contrario USER
+                row.appendChild(roleCell);
+
                 // Añadir la fila a la tabla
                 tableBody.appendChild(row);
             });
