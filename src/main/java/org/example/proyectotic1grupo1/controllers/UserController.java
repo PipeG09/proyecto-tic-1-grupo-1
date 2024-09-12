@@ -1,10 +1,12 @@
 package org.example.proyectotic1grupo1.controllers;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.example.proyectotic1grupo1.dto.UserDto;
 import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.services.UserService;
+import org.example.proyectotic1grupo1.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,6 +25,8 @@ public class UserController {
     private UserDetailsService userDetailsService;
 
     private UserService userService;
+    @Autowired
+    private UserServiceImpl userServiceImpl;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -60,6 +64,13 @@ public class UserController {
     public String register(Model model, UserDto userDto) {
         model.addAttribute("user", userDto);
         return "register";
+    }
+
+    @GetMapping("/users")
+    public String getAllUsers(Model model, Principal principal) {
+        List<User> users = userServiceImpl.findAll();
+        model.addAttribute("users", users);
+        return "users";
     }
 
     @PostMapping("/register")

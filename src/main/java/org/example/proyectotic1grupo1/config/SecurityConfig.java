@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/home").permitAll()
                         .requestMatchers("/").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/users").permitAll()
                         .requestMatchers("/index").permitAll() // Permitir acceso a /index sin autenticación
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
