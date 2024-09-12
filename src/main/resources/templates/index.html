@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +40,9 @@
             </li>
             <li class="nav-item" th:if="${username == null}">
                 <a class="nav-link" th:href="@{/login}">Iniciar Sesión</a>
+            </li>
+            <li class="nav-item" th:if="${isAdmin}">
+                <a class="nav-link" th:href="@{/admin}">Admin</a>
             </li>
 
 

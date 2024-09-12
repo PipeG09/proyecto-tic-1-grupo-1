@@ -8,6 +8,8 @@ import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.services.UserService;
 import org.example.proyectotic1grupo1.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -51,8 +53,15 @@ public class UserController {
             System.out.println("Usuario autenticado: " + principal.getName());
             UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
             model.addAttribute("username", principal.getName()); // Pasamos el nombre de usuario directamente
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+            model.addAttribute("isAdmin", isAdmin);
         } else {
             System.out.println("Principal es null, el usuario no está autenticado.");
+            model.addAttribute("username", null);
+            model.addAttribute("isAdmin", false);
         }
         return "index";
     }
