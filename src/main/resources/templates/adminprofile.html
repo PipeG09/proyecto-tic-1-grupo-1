@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile</title>
+    <style>
+        /* Insert your styles here */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: rgb(252, 252, 247);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #14110f;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 350px;
+        }
+
+        .login-container h2 {
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 80%;
+            padding: 15px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(217, 197, 178, 0.2);
+            color: #14110f;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .input-group input:focus {
+            background: rgba(217, 197, 178, 0.4);
+        }
+
+        .input-group i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            background-color: #34312d;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #423f3b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Admin Edit User</h2>
+
+    <form id="admin-profile-form" action="/api/users/${user.id}" method="post">
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="fullname" name="fullname" value="${user.fullname}" placeholder="Full Name">
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="text" id="username" name="username" value="${user.username}">
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Password">
+        </div>
+
+        <button type="submit" class="btn">Update User</button>
+    </form>
+</div>
+
+</body>
+</html>

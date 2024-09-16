@@ -18,4 +18,10 @@ public class AdminController {
         model.addAttribute("message", "Bienvenido, Administrador!");
         return "admin";
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/adminprofile")
+    public String adminProfile(Model model) {
+        return "adminprofile";
+    }
 }

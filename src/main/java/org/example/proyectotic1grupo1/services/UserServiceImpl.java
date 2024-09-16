@@ -53,4 +53,46 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public void updateUserProfile(String username, UserDto userDto) {
+        User user = userRepository.findByUsername(username);
+
+        // Verificamos si el usuario es null
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Actualizamos los datos del usuario
+        user.setFullname(userDto.getFullname());
+
+        // Si el usuario proporciona una nueva contraseña, la ciframos y la actualizamos
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        userRepository.save(user);
+    }
+
+
+    @Override
+    public void updateUserById(Long id, UserDto userDto) throws Exception {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        user.setFullname(userDto.getFullname());
+        user.setUsername(userDto.getUsername());
+
+        // Si el administrador proporciona una nueva contraseña, la ciframos y la actualizamos
+        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUserById(Long id) throws Exception {
+        userRepository.deleteById(id);
+    }
 }

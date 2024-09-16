@@ -85,6 +85,9 @@ public class UserController {
         return "users";
     }
 
+    @GetMapping("/profile")
+    public String profile() {return "profile";}
+
     @PostMapping("/register")
     public String registerSava(@ModelAttribute("user") UserDto userDto, Model model) {
         User user = userService.findByUsername(userDto.getUsername());

@@ -8,5 +8,13 @@ public interface UserService {
 
     User save(UserDto userDto);
 
+    void updateUserProfile(String username, UserDto userDto) throws Exception;
+
+
+    void updateUserById(Long id, UserDto userDto) throws Exception;
+
+
+    void deleteUserById(Long id) throws Exception;
+
 
 }

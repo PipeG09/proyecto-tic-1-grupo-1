@@ -27,6 +27,9 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/users}">Usuarios</a>
             </li>
+            <li class="nav-item" th:if="${isAdmin}">
+                <a class="nav-link" th:href="@{/admin}">Admin</a>
+            </li>
             <li class="nav-item" th:if="${username != null}">
                 <a class="nav-link" th:href="@{/profile}">
                     <span th:text="${username}"></span>
@@ -41,9 +44,7 @@
             <li class="nav-item" th:if="${username == null}">
                 <a class="nav-link" th:href="@{/login}">Iniciar Sesión</a>
             </li>
-            <li class="nav-item" th:if="${isAdmin}">
-                <a class="nav-link" th:href="@{/admin}">Admin</a>
-            </li>
+
 
 
 
