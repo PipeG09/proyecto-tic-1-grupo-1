@@ -86,7 +86,29 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String profile() {return "profile";}
+    public String profile(Model model, Principal principal) {
+        if (principal != null) {
+            System.out.println("Usuario autenticado: " + principal.getName());
+
+            // Cargar el usuario completo usando el username (principal.getName())
+            User user = userService.findByUsername(principal.getName());
+
+            if (user != null) {
+                model.addAttribute("username", user.getUsername());
+                model.addAttribute("fullname", user.getFullname()); // Pasamos el fullname
+            } else {
+                System.out.println("Usuario no encontrado.");
+                model.addAttribute("username", null);
+                model.addAttribute("fullname", null);
+            }
+        } else {
+            System.out.println("Principal es null, el usuario no está autenticado.");
+            model.addAttribute("username", null);
+            model.addAttribute("fullname", null);
+        }
+        return "profile";
+    }
+
 
     @PostMapping("/register")
     public String registerSava(@ModelAttribute("user") UserDto userDto, Model model) {

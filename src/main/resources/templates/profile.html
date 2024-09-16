@@ -89,12 +89,12 @@
   <form id="profile-form" action="/api/users/profile" method="post">
     <div class="input-group">
       <i class="fas fa-user"></i>
-      <input type="text" id="fullname" name="fullname" value="${user.fullname}" placeholder="Full Name">
+      <input type="text" id="fullname" name="fullname" th:value="${fullname}" placeholder="Full Name">
     </div>
 
     <div class="input-group">
       <i class="fas fa-envelope"></i>
-      <input type="text" id="username" name="username" value="${user.username}" readonly>
+      <input type="text" id="username" name="username" th:value="${username}" readonly>
     </div>
 
     <div class="input-group">
