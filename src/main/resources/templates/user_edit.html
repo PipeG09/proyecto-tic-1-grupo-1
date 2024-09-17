@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario</title>
+    <style>
+        /* Tus estilos aquí, puedes reutilizar los estilos del formulario de perfil */
+        .form-container {
+            width: 400px;
+            margin: auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-container h2 {
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input, .input-group select {
+            width: 80%;
+            padding: 15px;
+            padding-left: 45px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(217, 197, 178, 0.2);
+            color: #14110f;
+            font-size: 16px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            background: rgba(217, 197, 178, 0.4);
+        }
+
+        .btn {
+            background-color: #34312d;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #423f3b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Editar Usuario</h2>
+    <form th:action="@{'/admin/users/edit/' + ${userDto.id}}" method="post" th:object="${userDto}">
+        <!-- Token CSRF -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <!-- Username -->
+        <div class="input-group">
+            <input type="text" th:field="*{username}" placeholder="Username" readonly>
+        </div>
+        <!-- Fullname -->
+        <div class="input-group">
+            <input type="text" th:field="*{fullname}" placeholder="Nombre Completo">
+        </div>
+        <!-- Password -->
+        <div class="input-group">
+            <input type="password" th:field="*{password}" placeholder="Contraseña (dejar en blanco para no cambiar)">
+        </div>
+        <!-- Roles (checkboxes) -->
+        <div class="input-group" style="text-align: left; margin-left: 60px;">
+            <label th:each="role : ${allRoles}">
+                <input type="checkbox" th:value="${role.id}" th:field="*{roleIds}" th:checked="${userDto.roleIds.contains(role.id)}"/>
+                <span th:text="${role.name}"></span><br/>
+            </label>
+        </div>
+        <button type="submit" class="btn">Guardar Cambios</button>
+    </form>
+</div>
+
+</body>
+</html>

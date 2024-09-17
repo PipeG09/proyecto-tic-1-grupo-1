@@ -49,22 +49,26 @@ public class UserController {
 
 
 
+
     @GetMapping("/index")
     public String index(Model model, Principal principal) {
-        if (principal != null) {
-            System.out.println("Usuario autenticado: " + principal.getName());
-            UserDetails userDetails = userDetailsService.loadUserByUsername(principal.getName());
-            model.addAttribute("username", principal.getName()); // Pasamos el nombre de usuario directamente
+        boolean isAuthenticated = false;
+        boolean isAdmin = false;
+        String username = null;
 
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            boolean isAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
-            model.addAttribute("isAdmin", isAdmin);
-        } else {
-            System.out.println("Principal es null, el usuario no está autenticado.");
-            model.addAttribute("username", null);
-            model.addAttribute("isAdmin", false);
+        if (principal != null) {
+            isAuthenticated = true;
+            username = principal.getName();
+
+            // Obtener los roles del usuario
+            User user = userService.findByUsername(username);
+            isAdmin = userService.isAdmin(user);
         }
+
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("username", username);
+
         return "index";
     }
 

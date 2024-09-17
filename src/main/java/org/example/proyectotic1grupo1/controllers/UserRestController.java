@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -27,10 +28,13 @@ public class UserRestController {
     private UserService userService;
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return UserServiceImpl.findAll();
+    public List<UserDto> getAllUsers() {
+        List<User> users = userService.findAll();
+        // Convertimos la lista de User a UserDto
+        return users.stream()
+                .map(UserDto::fromUser)
+                .collect(Collectors.toList());
     }
-
 
     @PutMapping("/profile")
     public void updateUserProfile(@ModelAttribute UserDto userDto, BindingResult result, Authentication authentication, HttpServletResponse response) throws IOException {

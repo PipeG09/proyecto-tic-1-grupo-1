@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -32,23 +34,44 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
+    public boolean isAdmin(User user) {
+        return user.getRoles().stream()
+                .anyMatch(role -> role.getName().equalsIgnoreCase("ADMIN") || role.getName().equalsIgnoreCase("ROLE_ADMIN"));
+
+    }
+
+
+
+
+
     @Override
     public User save(UserDto userDto) {
-        User user = new User(userDto.getUsername(), passwordEncoder.encode(userDto.getPassword()),
-                userDto.getFullname());
+
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setFullname(userDto.getFullname());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        Set<Role> roles = new HashSet<>();
 
         // Asignación del rol USER por defecto
-        Role userRole = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Role not found"));
-        user.getRoles().add(userRole);
+        Role userRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new RuntimeException("Role USER not found"));
+        roles.add(userRole);
 
-        // Si es un admin, asignar el rol ADMIN
-        if (userDto.isAdmin()) { // Supongo que en el DTO agregas una propiedad isAdmin
-            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow(() -> new RuntimeException("Role not found"));
-            user.getRoles().add(adminRole);
+        // Asignación del rol ADMIN si isAdmin es verdadero
+        if (Boolean.TRUE.equals(userDto.getIsAdmin())) {
+            Role adminRole = roleRepository.findByName("ADMIN")
+                    .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
+            roles.add(adminRole);
         }
+
+        user.setRoles(roles);
 
         return userRepository.save(user);
     }
+
+
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -78,11 +101,16 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new Exception("User not found"));
 
         user.setFullname(userDto.getFullname());
-        user.setUsername(userDto.getUsername());
 
         // Si el administrador proporciona una nueva contraseña, la ciframos y la actualizamos
         if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        // Actualizar roles
+        if (userDto.getRoleIds() != null && !userDto.getRoleIds().isEmpty()) {
+            List<Role> roles = roleRepository.findAllById(userDto.getRoleIds());
+            user.setRoles(new HashSet<>(roles));
         }
 
         userRepository.save(user);
@@ -90,6 +118,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Long id) throws Exception {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        userRepository.delete(user);
+    }
+
+
+    @Override
+    public User findById(Long id) throws Exception {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found"));
     }
 }

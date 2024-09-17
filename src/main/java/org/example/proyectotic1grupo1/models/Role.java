@@ -2,6 +2,9 @@ package org.example.proyectotic1grupo1.models;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 public class Role {
     @Id
@@ -10,6 +13,9 @@ public class Role {
 
     @Column(unique = true)
     private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -25,6 +31,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }
 

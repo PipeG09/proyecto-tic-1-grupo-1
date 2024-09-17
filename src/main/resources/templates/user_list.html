@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+    <style>
+        /* Tus estilos aquí */
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #14110f;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #34312d;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            background-color: #34312d;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #423f3b;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align: center;">Lista de Usuarios</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Nombre Completo</th>
+        <th>Roles</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.fullname}"></td>
+        <td>
+        <span th:if="${user.roles != null}">
+            <span th:each="role, iterStat : ${user.roles}">
+                <span th:text="${role.name}"></span><span th:if="${!iterStat.last}">, </span>
+            </span>
+        </span>
+            <span th:if="${user.roles == null || #lists.isEmpty(user.roles)}">Sin roles</span>
+        </td>
+        <td>
+            <a th:href="@{'/admin/users/edit/' + ${user.id}}" class="btn">Editar</a>
+            <a th:href="@{'/admin/users/delete/' + ${user.id}}" class="btn" onclick="return confirm('¿Estás seguro de eliminar este usuario?');">Eliminar</a>
+        </td>
+    </tr>
+
+
+    </tbody>
+</table>
+
+</body>
+</html>
