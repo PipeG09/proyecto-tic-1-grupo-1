@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
   <style>
-    /* Insert your styles here */
+    /* Tus estilos aquí */
     body {
       margin: 0;
       padding: 0;
@@ -86,20 +86,22 @@
 <div class="login-container">
   <h2>Profile</h2>
 
-  <form id="profile-form" action="/api/users/profile" method="post">
-    <div class="input-group">
-      <i class="fas fa-user"></i>
-      <input type="text" id="fullname" name="fullname" th:value="${fullname}" placeholder="Full Name">
-    </div>
+  <form id="profile-form" th:action="@{/api/profile}" method="post" th:object="${userDto}">
+    <!-- Para soportar métodos PUT en formularios HTML -->
+    <input type="hidden" name="_method" value="put"/>
+    <!-- Token CSRF -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
+    <!-- Mostrar el username como texto o campo de solo lectura -->
     <div class="input-group">
       <i class="fas fa-envelope"></i>
-      <input type="text" id="username" name="username" th:value="${username}" readonly>
+      <input type="text" th:field="*{username}" readonly>
     </div>
 
+    <!-- Campo para modificar el fullname -->
     <div class="input-group">
-      <i class="fas fa-lock"></i>
-      <input type="password" id="password" name="password" placeholder="Password">
+      <i class="fas fa-user"></i>
+      <input type="text" th:field="*{fullname}" placeholder="Full Name">
     </div>
 
     <button type="submit" class="btn">Update Profile</button>

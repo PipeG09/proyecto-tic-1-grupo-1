@@ -7,6 +7,11 @@ public class UserDto {
     private String fullname;
     private Boolean isAdmin; // Asegúrate de tener este campo
 
+    // Constructor sin argumentos
+    public UserDto() {
+        this.isAdmin = false; // Inicializa isAdmin si es necesario
+    }
+
     // Actualiza el constructor para incluir isAdmin
     public UserDto(String username, String password, String fullname) {
         super();

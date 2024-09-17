@@ -58,21 +58,18 @@ public class UserServiceImpl implements UserService {
     public void updateUserProfile(String username, UserDto userDto) {
         User user = userRepository.findByUsername(username);
 
-        // Verificamos si el usuario es null
         if (user == null) {
             throw new RuntimeException("User not found");
         }
 
-        // Actualizamos los datos del usuario
+        // Actualizamos solo el fullname
         user.setFullname(userDto.getFullname());
 
-        // Si el usuario proporciona una nueva contraseña, la ciframos y la actualizamos
-        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        }
+        // No actualizamos el username ni el password
 
         userRepository.save(user);
     }
+
 
 
     @Override

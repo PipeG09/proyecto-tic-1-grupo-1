@@ -1,5 +1,6 @@
 package org.example.proyectotic1grupo1.controllers;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.proyectotic1grupo1.dto.UserDto;
 import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.services.UserService;
@@ -9,8 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,7 +24,7 @@ public class UserRestController {
     private UserServiceImpl UserServiceImpl;
 
     @Autowired
-    private UserService UserService;
+    private UserService userService;
 
     @GetMapping("/users")
     public List<User> getAllUsers() {
@@ -30,21 +33,26 @@ public class UserRestController {
 
 
     @PutMapping("/profile")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UserDto userDto, Authentication authentication) {
+    public void updateUserProfile(@ModelAttribute UserDto userDto, BindingResult result, Authentication authentication, HttpServletResponse response) throws IOException {
+        if (result.hasErrors()) {
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "Datos inválidos");
+            return;
+        }
         String username = authentication.getName();
         try {
-            UserService.updateUserProfile(username, userDto);
-            return ResponseEntity.ok("User profile updated successfully");
+            userService.updateUserProfile(username, userDto);
+            response.sendRedirect("/profile/success");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating profile: " + e.getMessage());
+            response.sendError(HttpStatus.BAD_REQUEST.value(), "Error al actualizar el perfil");
         }
     }
+
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         try {
-            UserService.updateUserById(id, userDto);
+            userService.updateUserById(id, userDto);
             return ResponseEntity.ok("User updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error updating user: " + e.getMessage());
@@ -55,7 +63,7 @@ public class UserRestController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
-            UserService.deleteUserById(id);
+            userService.deleteUserById(id);
             return ResponseEntity.ok("User deleted successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error deleting user: " + e.getMessage());

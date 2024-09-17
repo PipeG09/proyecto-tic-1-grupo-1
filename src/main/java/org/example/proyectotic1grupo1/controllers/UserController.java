@@ -8,16 +8,18 @@ import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.services.UserService;
 import org.example.proyectotic1grupo1.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -85,29 +87,29 @@ public class UserController {
         return "users";
     }
 
+    @GetMapping("/profile/success")
+    public String profileUpdateSuccess() {
+        return "profile_success";
+    }
+
+
+
+
     @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
     public String profile(Model model, Principal principal) {
         if (principal != null) {
-            System.out.println("Usuario autenticado: " + principal.getName());
-
-            // Cargar el usuario completo usando el username (principal.getName())
             User user = userService.findByUsername(principal.getName());
-
             if (user != null) {
-                model.addAttribute("username", user.getUsername());
-                model.addAttribute("fullname", user.getFullname()); // Pasamos el fullname
-            } else {
-                System.out.println("Usuario no encontrado.");
-                model.addAttribute("username", null);
-                model.addAttribute("fullname", null);
+                UserDto userDto = new UserDto();
+                userDto.setUsername(user.getUsername());
+                userDto.setFullname(user.getFullname());
+                model.addAttribute("userDto", userDto);
             }
-        } else {
-            System.out.println("Principal es null, el usuario no está autenticado.");
-            model.addAttribute("username", null);
-            model.addAttribute("fullname", null);
         }
         return "profile";
     }
+
 
 
     @PostMapping("/register")
@@ -120,4 +122,5 @@ public class UserController {
         userService.save(userDto);
         return "redirect:/register?success";
     }
+
 }
