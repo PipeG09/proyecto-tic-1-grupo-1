@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-        @GetMapping("/{}")
-        public ResponseEntity<Reservation> getMovieById(@PathVariable String rid) {
-            return ResponseEntity.notFound().build();
-        }
-
 
 
     }
