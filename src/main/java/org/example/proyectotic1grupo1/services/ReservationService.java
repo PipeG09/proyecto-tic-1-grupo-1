@@ -1,7 +1,5 @@
 package org.example.proyectotic1grupo1.services;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +8,7 @@ import org.example.proyectotic1grupo1.repositories.ReservationsRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReservetionService {
+public class ReservationService {
     private ReservationsRepository reservationsRepository;
     public List<List<Integer>> ocupation_matrix(int venueNumber, Date date, int movie_key){
         // Inicialise the ocupation matrix
