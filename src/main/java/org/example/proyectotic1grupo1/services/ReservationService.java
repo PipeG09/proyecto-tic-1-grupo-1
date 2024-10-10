@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.example.proyectotic1grupo1.repositories.ReservationsRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+
+
 
 @Service
 public class ReservationService {
