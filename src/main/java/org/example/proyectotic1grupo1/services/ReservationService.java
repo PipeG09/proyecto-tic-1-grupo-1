@@ -28,7 +28,7 @@ public class ReservationService {
 
         for (int i = 0; i < occupied_seats.size(); i++){
             for (int j=0; j<2; j++){
-                ocupation_matrix.get(i).set(j,1);
+                ocupation_matrix.get(occupied_seats.get(i).get(0)).set(occupied_seats.get(i).get(1),1);
             }
         }
 
