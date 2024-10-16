@@ -4,6 +4,9 @@ import org.example.proyectotic1grupo1.dto.UserDto;
 import org.example.proyectotic1grupo1.models.Movie;
 import org.example.proyectotic1grupo1.models.Role;
 import org.example.proyectotic1grupo1.models.User;
+import org.example.proyectotic1grupo1.services.MovieService;
+import org.example.proyectotic1grupo1.services.MovieServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,33 +15,54 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
 public class MovieController {
 
-    @GetMapping("/{title}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable String title){
-        return ResponseEntity.notFound().build();
+    @Autowired
+    private MovieService movieService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable Long id){
+        Movie movie = movieService.findById(id);
+        if (movie != null) {
+            return ResponseEntity.ok(movie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
-    public ResponseEntity<Movie> postMovie(String title, String description, String genre, int duration){
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie){
+        Movie savedMovie = movieService.save(movie);
+        return ResponseEntity.ok(savedMovie);
     }
 
     @GetMapping
-    public ResponseEntity<Movie> getAllMovies(){
-        return ResponseEntity.notFound().build();
+    public List<Movie> getAllMovies(){
+        return movieService.findAll();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Movie> deleteMovieByTitle(String title){
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
+        boolean deleted = movieService.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(String title, String description, String genre, int duration){
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
+        Movie updatedMovie = movieService.update(id, movieDetails);
+        if (updatedMovie != null) {
+            return ResponseEntity.ok(updatedMovie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
