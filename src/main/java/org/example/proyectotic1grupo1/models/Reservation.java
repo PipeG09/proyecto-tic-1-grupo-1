@@ -8,10 +8,13 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reservationId;
-    public long venueId;
-    public long screeningId;
+    public long venueId; // foreign
+    public long screeningId; // foreign
+    @Column(name="userId")
     public long userId;
+    @Column(name = "seatRow")
     public int seatRow;
+    @Column(name = "seatColumn")
     public int seatColumn;
 
     public Reservation() {}

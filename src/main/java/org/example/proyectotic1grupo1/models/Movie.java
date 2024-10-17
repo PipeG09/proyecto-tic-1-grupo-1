@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long MovieId;
+    private long movieId;
     @Column(name="title", nullable=false)
     String title ;
     @Column(name = "description")
