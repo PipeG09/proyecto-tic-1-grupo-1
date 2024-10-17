@@ -2,6 +2,7 @@ package org.example.proyectotic1grupo1.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -18,12 +19,12 @@ public class Screening {
     private long movieId;
 
     @Column(name="date")
-    private Date date;
+    private LocalDateTime date;
 
     public Screening() {
     }
 
-    public Screening(long venueId, long movieId, Date date) {
+    public Screening(long venueId, long movieId, LocalDateTime date) {
         this.venueId = venueId;
         this.movieId = movieId;
         this.date = date;
@@ -45,11 +46,11 @@ public class Screening {
         this.movieId = movieId;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

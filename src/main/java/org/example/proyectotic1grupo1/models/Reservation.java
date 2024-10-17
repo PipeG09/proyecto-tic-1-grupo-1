@@ -2,26 +2,38 @@ package org.example.proyectotic1grupo1.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long reservationId;
-    public long venueId; // foreign
+    private long reservationId;
+
+    @Column(name="screeningId")
     public long screeningId; // foreign
+
     @Column(name="userId")
     public long userId;
+
     @Column(name = "seatRow")
     public int seatRow;
+
     @Column(name = "seatColumn")
     public int seatColumn;
 
-    public Reservation() {}
+    @ManyToOne
+    @JoinColumn(name = "screeningId", insertable = false, updatable = false)
+    private Screening screening;
 
-    public Reservation(long screeningId, long venueId, long userId, int seatRow, int seatColumn) {
+    @ManyToOne
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    private User user;
+
+    public Reservation(long screeningId, long userId, int seatRow, int seatColumn) {
         this.screeningId = screeningId;
-        this.venueId = venueId;
+
         this.userId = userId;
         this.seatRow = seatRow;
         this.seatColumn = seatColumn;
@@ -35,14 +47,6 @@ public class Reservation {
 
     public void setScreeningId(long screeningId) {
         this.screeningId = screeningId;
-    }
-
-    public long getVenueId() {
-        return venueId;
-    }
-
-    public void setVenueId(long venueId) {
-        this.venueId = venueId;
     }
 
     public long getUserId() {
@@ -67,5 +71,13 @@ public class Reservation {
 
     public void setSeatColumn(int seatColumn) {
         this.seatColumn = seatColumn;
+    }
+
+    public Screening getScreening() {
+        return screening;
+    }
+
+    public void setScreening(Screening screening) {
+        this.screening = screening;
     }
 }
