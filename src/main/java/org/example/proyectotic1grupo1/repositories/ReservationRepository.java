@@ -1,10 +1,9 @@
 package org.example.proyectotic1grupo1.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import org.example.proyectotic1grupo1.models.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
