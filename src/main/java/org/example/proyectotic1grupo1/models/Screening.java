@@ -53,4 +53,12 @@ public class Screening {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+    public long getScreeningId(){
+        return screeningId;
+    }
+
+    public void setScreeningId(long id){
+        this.screeningId=id;
+    }
 }

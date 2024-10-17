@@ -31,6 +31,9 @@ public class Reservation {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
+    public Reservation() {
+    }
+
     public Reservation(long screeningId, long userId, int seatRow, int seatColumn) {
         this.screeningId = screeningId;
 
