@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.example.proyectotic1grupo1.models.Reservation;
 import org.example.proyectotic1grupo1.repositories.ReservationsRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -25,34 +26,39 @@ public class ReservationService {
         }
 
         // Fill it
-            List<List<Integer>> occupied_seats = reservationsRepository.ocupationQuery(venueNumber, date, movie_key);
+            List<Reservation> occupied_seats = reservationsRepository.ocupationQuery(venueNumber, date, movie_key);
+
         // Thought of adding a try catch, but the function is for internal use so i assume it will always be called
         // with valid parameters
 
-        for (int i = 0; i < occupied_seats.size(); i++){
-            for (int j=0; j<2; j++){
-                ocupation_matrix.get(occupied_seats.get(i).get(0)).set(occupied_seats.get(i).get(1),1);
-            }
+        for (Reservation occupiedSeat : occupied_seats) { // iterate through the reservations
+            ocupation_matrix.get(occupiedSeat.getSeatRow()).set(occupiedSeat.getSeatColumn(), 1);
+            // I change the row corresponding to the seatRow and set the seatColumn to 1
         }
+
 
         return ocupation_matrix;
     }
 
 
-    public int reserve_seats(int venueNumber, Date date, int movie_key,String mail,int row,int col){
-        try{
-            reservationsRepository.reserveQuery(venueNumber,date,movie_key,mail,row,col);
+    public int reserve_seats(long screeningId,long userId,long venueId,int seatRow,int seatColumn){
+
+        Reservation reservation = new Reservation(screeningId, venueId, userId, seatRow, seatColumn);
+        try {reservationsRepository.save(reservation);
             return 1;
-        }catch(Exception e){
+        }
+        catch(Exception e){
             return -1;
         }
 
     }
-    public int cancel_reserved_seats(int venueNumber, Date date, int movie_key,String mail){
-        try {
-            reservationsRepository.cancelationQuery(venueNumber,date,movie_key,mail);
+    public int cancel_reserved_seats(long reservationId){
+        if (reservationsRepository.existsById(reservationId)) {
+            try {
+                reservationsRepository.deleteById(reservationId);
+            } catch (Exception e){return -1;}
             return 1;
-        }catch (Exception e){
+        } else {
             return -1;
         }
     }

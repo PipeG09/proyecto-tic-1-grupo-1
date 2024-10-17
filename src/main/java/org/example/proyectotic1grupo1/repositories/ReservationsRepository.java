@@ -11,9 +11,7 @@ import java.util.List;
 
 public interface ReservationsRepository extends JpaRepository<Reservation, Long> {
     @Query("")
-    public List<List<Integer>> ocupationQuery(int venueNumber, Date date, int movie_key);
+    public List<Reservation> ocupationQuery(int venueNumber, Date date, int movie_key);
     @Query("")
     public void reserveQuery(int venueNumber, Date date, int movie_key,String mail,int row,int col);
-    @Query("")
-    public void cancelationQuery(int venueNumber, Date date, int movie_key,String mail);
 }
