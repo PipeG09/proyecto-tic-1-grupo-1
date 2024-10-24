@@ -25,4 +25,12 @@ public class Venue {
     public String getNeighborhood() {
         return neighborhood;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
+    }
 }
