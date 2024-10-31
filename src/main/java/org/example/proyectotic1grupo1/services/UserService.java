@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     User findByUsername(String username);
 
-    User save(String username, String password, String fullname);
+    User save(User user);
 
     void updateUserProfile(String username, UserDto userDto) throws Exception;
 

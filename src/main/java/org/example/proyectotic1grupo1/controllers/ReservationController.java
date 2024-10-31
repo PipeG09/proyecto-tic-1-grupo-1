@@ -35,7 +35,7 @@ public class ReservationController {
     }
 
     // Endpoint para obtener todas las reservas
-    @GetMapping("/reservations}")
+    @GetMapping("/reservations")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Reservation>> getAllReservations(Model model) {
         User user = (User) model.getAttribute("user");

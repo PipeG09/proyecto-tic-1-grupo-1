@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/screenings")
+@RequestMapping("/api/screenings")
 public class ScreeningController {
 
     private final ScreeningServiceImpl screeningService;

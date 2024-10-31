@@ -87,6 +87,10 @@
 			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 			<version>3.0.4.RELEASE</version> <!-- Asegúrate de agregar la versión -->
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class UserController {
 
 
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<?> login(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
         User user = userService.findByUsername(username);
         boolean isAuth = userService.validate(user,password);
@@ -57,12 +57,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestParam("username") String username, @RequestParam("password") String password,@RequestParam("fullname") String fullname,Model model) {
-        User user = userService.save(username,password,fullname);
+    public ResponseEntity<?> register(@RequestBody User user, Model model) {
+        User user2 = userService.save(user);
         if (user == null) {
             return ResponseEntity.badRequest().body("User Already Exists");
         }
-        return login(username,password,model);
+        return ResponseEntity.ok(user2);
 
     }
 
