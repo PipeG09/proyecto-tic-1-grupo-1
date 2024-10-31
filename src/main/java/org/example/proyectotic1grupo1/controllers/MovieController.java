@@ -24,7 +24,7 @@ public class MovieController {
     @Autowired
     private MovieService movieService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Movie> getMovieById(@PathVariable Long id){
         Movie movie = movieService.findById(id);
         if (movie != null) {
@@ -34,18 +34,18 @@ public class MovieController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Movie> createMovie(@RequestBody Movie movie){
         Movie savedMovie = movieService.save(movie);
         return ResponseEntity.ok(savedMovie);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Movie> getAllMovies(){
         return movieService.findAll();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
         boolean deleted = movieService.deleteById(id);
         if (deleted) {

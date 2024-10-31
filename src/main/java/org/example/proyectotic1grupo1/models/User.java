@@ -17,7 +17,6 @@ public class User {
     private String fullname;
 
     public User() {
-
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

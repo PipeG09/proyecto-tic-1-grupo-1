@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserService {
     User findByUsername(String username);
 
-    User save(UserDto userDto);
+    User save(String username, String password, String fullname);
 
     void updateUserProfile(String username, UserDto userDto) throws Exception;
 
@@ -23,6 +23,8 @@ public interface UserService {
     List<User> findAll();
 
     boolean isAdmin(User user);
+
+    boolean validate(User user, String password);
 
 
 

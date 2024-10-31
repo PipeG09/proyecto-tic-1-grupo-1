@@ -22,7 +22,7 @@ public class ReservationController {
     }
 
     // Endpoint para crear una nueva reserva
-    @PostMapping
+    @PostMapping("/{screening}")
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
         int savedReservation = reservationService.reserveSeats(reservation);
         if (savedReservation == 1) {

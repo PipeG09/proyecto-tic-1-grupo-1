@@ -8,6 +8,7 @@ import org.example.proyectotic1grupo1.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,28 +46,14 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User save(UserDto userDto) {
-
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setFullname(userDto.getFullname());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        Set<Role> roles = new HashSet<>();
-
-        // Asignación del rol USER por defecto
-        Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("Role USER not found"));
-        roles.add(userRole);
-
-        // Asignación del rol ADMIN si isAdmin es verdadero
-        if (Boolean.TRUE.equals(userDto.getIsAdmin())) {
-            Role adminRole = roleRepository.findByName("ADMIN")
-                    .orElseThrow(() -> new RuntimeException("Role ADMIN not found"));
-            roles.add(adminRole);
+     public User save(String username, String password, String fullname) {
+        if (userRepository.findByUsername(username)!=null) {
+            return null;
         }
-
-        user.setRoles(roles);
+        User user = new User();
+        user.setUsername(username);
+        user.setFullname(fullname);
+        user.setPassword(passwordEncoder.encode(password));
 
         return userRepository.save(user);
     }
@@ -129,5 +116,13 @@ public class UserServiceImpl implements UserService {
     public User findById(Long id) throws Exception {
         return userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found"));
+    }
+
+    @Override
+    public boolean validate(User user, String password) {
+        if (user == null) {
+            return false;
+        }
+        return passwordEncoder.encode(password).equals(user.getPassword());
     }
 }
