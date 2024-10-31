@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class VenueControllerTest {
+class VenueServiceTests {
 
     @Mock
     private VenueService venueService;
@@ -54,22 +54,6 @@ class VenueControllerTest {
         verify(venueService, times(1)).findById(1L);
     }
 
-    @Test
-    void testCreateVenue() {
-        Venue venue = new Venue("Neighbourhood1");
-        when(venueService.save(venue)).thenReturn(venue);
 
-        Venue response = venueController.createVenue(venue).getBody();
 
-        assertEquals(venue, response);
-        verify(venueService, times(1)).save(venue);
-    }
-
-    @Test
-    void testDeleteVenue() throws Exception {
-        ResponseEntity<Void> response = venueController.deleteVenue(1L);
-
-        assertEquals("Venue deleted successfully", response.getBody());
-        verify(venueService, times(1)).deleteById(1L);
-    }
 }

@@ -79,7 +79,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<Reservation> findAll(User user) {
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().minusHours(1);
         return reservationsRepository.findByUserIdAndScreening_DateAfter(user.getId(),date);
     }
 }
