@@ -21,43 +21,19 @@ public class ScreeningController {
     @GetMapping
     public ResponseEntity<List<Screening>> getAllScreenings() {
         List<Screening> screenings = screeningService.findAll();
-        return new ResponseEntity<>(screenings, HttpStatus.OK);
+        return ResponseEntity.ok(screenings);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Screening> getScreeningById(@PathVariable Long id) {
         try {
             Screening screening = screeningService.findById(id);
-            return new ResponseEntity<>(screening, HttpStatus.OK);
+            return ResponseEntity.ok(screening);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Screening> createScreening(@RequestBody Screening screening) {
-        Screening newScreening = screeningService.save(screening);
-        return new ResponseEntity<>(newScreening, HttpStatus.CREATED);
-    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Screening> updateScreening(@PathVariable Long id, @RequestBody Screening updatedScreening) {
-        try {
-            Screening screening = screeningService.update(id, updatedScreening);
-            return new ResponseEntity<>(screening, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteScreening(@PathVariable Long id) {
-        try {
-            screeningService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 }
 

@@ -18,7 +18,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/movies")
+@RequestMapping("/api/movies")
 public class MovieController {
 
     @Autowired
@@ -33,36 +33,9 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie){
-        Movie savedMovie = movieService.save(movie);
-        return ResponseEntity.ok(savedMovie);
-    }
-
     @GetMapping("/all")
     public List<Movie> getAllMovies(){
         return movieService.findAll();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
-        boolean deleted = movieService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovie(@PathVariable Long id, @RequestBody Movie movieDetails) {
-        Movie updatedMovie = movieService.update(id, movieDetails);
-        if (updatedMovie != null) {
-            return ResponseEntity.ok(updatedMovie);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }

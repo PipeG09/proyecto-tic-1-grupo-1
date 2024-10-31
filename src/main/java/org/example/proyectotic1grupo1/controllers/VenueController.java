@@ -21,7 +21,7 @@ public class VenueController {
     @GetMapping
     public ResponseEntity<List<Venue>> getAllVenues() {
         List<Venue> venues = venueService.findAll();
-        return new ResponseEntity<>(venues, HttpStatus.OK);
+        return ResponseEntity.ok(venues);
     }
 
     @GetMapping("/{id}")

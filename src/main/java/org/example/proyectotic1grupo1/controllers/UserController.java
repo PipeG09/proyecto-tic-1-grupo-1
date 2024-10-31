@@ -50,8 +50,8 @@ public class UserController {
             return ResponseEntity.ok().body(user);
         }
         if (user == null){
-            return ResponseEntity.badRequest().body("User Does Not Exist");
-        }
+            return ResponseEntity.notFound().build();}
+
         return ResponseEntity.badRequest().body("Password Does Not Match");
 
     }
@@ -71,11 +71,22 @@ public class UserController {
         return ResponseEntity.ok().body(userServiceImpl.findAll());
     }
 
-
+    @GetMapping("/get/user/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        try {
+            User user = userService.findById(id);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok().body(user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Unknown Error");
+        }
+    }
 
     @GetMapping("/profile")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> profile(Model model, Principal principal) {
+    public ResponseEntity<?> profile(Model model) {
          User user = (User) model.getAttribute("user");
          return ResponseEntity.ok().body(user);
     }
