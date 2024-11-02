@@ -99,7 +99,16 @@ public class UserController {
          return ResponseEntity.ok().body(user);
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        if (!userSessionService.loggedIn()){// check user is logged in
+            return ResponseEntity.badRequest().body("Not logged in");
+        }
+        userSessionService.setCurrentUser(null);
+        return ResponseEntity.ok().build();
 
+
+    }
 
 }
 //
