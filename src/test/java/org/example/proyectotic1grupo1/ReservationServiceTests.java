@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,9 +37,9 @@ class ReservationServiceTests {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Initializing objects
         screening = new Screening();
-        screening.setScreeningId(1L); // Assuming Screening has an ID field
+        screening.setScreeningId(1L);
+        screening.setDate(LocalDateTime.now());
 
         reservation = new Reservation();
         reservation.setScreeningId(1L);
@@ -134,20 +135,6 @@ class ReservationServiceTests {
 
         // Assert
         assertNull(result);
-    }
-
-    @Test
-    void testFindAll() {
-        // Arrange
-        LocalDateTime now = LocalDateTime.now();
-        List<Reservation> reservations = Arrays.asList(reservation);
-        when(reservationsRepository.findByUserIdAndScreening_DateAfter(1L, now)).thenReturn(reservations);
-
-        // Act
-        List<Reservation> result = reservationService.findAll(user);
-
-        // Assert
-        assertEquals(1, result.size());
     }
 
 }

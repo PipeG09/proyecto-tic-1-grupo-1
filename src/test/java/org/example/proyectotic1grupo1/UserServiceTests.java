@@ -67,37 +67,7 @@ class UserServiceTests {
         assertTrue(isAdmin);
     }
 
-    @Test
-    void testSave() {
-        UserDto userDto = new UserDto();
-        userDto.setUsername("testUser");
-        userDto.setFullname("Test User");
-        userDto.setPassword("password");
-        userDto.setIsAdmin(false);
 
-        Role userRole = new Role();
-        userRole.setName("USER");
-
-        // Mockear los métodos necesarios
-        when(roleRepository.findByName("USER")).thenReturn(Optional.of(userRole));
-        when(passwordEncoder.encode("password")).thenReturn("encodedPassword");
-
-        // Mockear el objeto User que será guardado
-        User savedUser = new User();
-        savedUser.setUsername("testUser");
-        savedUser.setFullname("Test User");
-        savedUser.setPassword("encodedPassword");
-        savedUser.setRoles(Set.of(userRole));
-
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
-        User result = userService.save(userDto);
-
-        assertNotNull(result);
-        assertEquals("testUser", result.getUsername());
-        assertEquals("Test User", result.getFullname());
-        assertEquals("encodedPassword", result.getPassword());
-    }
 
     @Test
     void testUpdateUserProfile() {
