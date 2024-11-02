@@ -6,6 +6,7 @@ import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.repositories.RoleRepository;
 import org.example.proyectotic1grupo1.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,16 +19,16 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder() ;
+
 
     private UserRepository userRepository;
-    private RoleRepository roleRepository; // Agrega RoleRepository
+
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) { // Añadir RoleRepository aquí
         super();
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository; // Inicializa RoleRepository
+
     }
 
     @Override
@@ -89,6 +90,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return false;
         }
-        return passwordEncoder.encode(password).equals(user.getPassword());
+        return passwordEncoder.matches(password, user.getPassword());
     }
+
+
 }

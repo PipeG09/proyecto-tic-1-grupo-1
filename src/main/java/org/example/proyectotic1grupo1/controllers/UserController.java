@@ -7,7 +7,9 @@ import org.example.proyectotic1grupo1.dto.UserDto;
 import org.example.proyectotic1grupo1.models.User;
 import org.example.proyectotic1grupo1.services.UserService;
 import org.example.proyectotic1grupo1.services.UserServiceImpl;
+import org.example.proyectotic1grupo1.services.UserSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,12 +28,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class UserController {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserSessionService userSessionService;
 
     private UserService userService;
 
-    @Autowired
-    private UserServiceImpl userServiceImpl;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -41,12 +42,12 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto userDto,Model model) {
+//    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> login(@RequestBody UserDto userDto) {
         User user = userService.findByUsername(userDto.getUsername());
         boolean isAuth = userService.validate(user,userDto.getPassword());
         if (isAuth) {
-            model.addAttribute("user", user);
-            model.addAttribute("isAuthenticated", true);
+            userSessionService.setCurrentUser(user);
             return ResponseEntity.ok().body(user);
         }
         if (user == null){
@@ -58,6 +59,11 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user, Model model) {
+        // Same as PreAuthorize("loggedIn()")
+        if (!userSessionService.loggedIn()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+
         User user2 = userService.save(user);
         if (user == null) {
             return ResponseEntity.badRequest().body("User Already Exists");
@@ -68,7 +74,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> users() {
-        return ResponseEntity.ok().body(userServiceImpl.findAll());
+        return ResponseEntity.ok().body(userService.findAll());
     }
 
     @GetMapping("/get/user/{id}")
@@ -85,12 +91,25 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> profile(Model model) {
-         User user = (User) model.getAttribute("user");
+        if (!userSessionService.loggedIn()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
+        }
+        User user = userSessionService.getCurrentUser();
          return ResponseEntity.ok().body(user);
     }
 
 
 
 }
+//
+//$2a$10$mY3UohZONQAMU4VYiUVn7O/up4rT7hmDrIU7.K9LYSl2OiOXtpMS.
+//$2a$10$cKLMumDN3BynjCcAwozDBOip6d4MvZdrlbx0LiTvPlkCy2lT72ErG
+// $2a$10$L8BI.HSLdhw06Pkf6LoY6.3tMOeHZHoTbNclyeSqiqBQeeGk6HVeK
+// $2a$10$dyxDhvy1pskSBl.RPT0rqeRaGCqt1Gl.91qbz7lp4ONJ7MmUxVBxK
+//{"id":52,"username":"pipeG","password":"$2a$10$mY3UohZONQAMU4VYiUVn7O/up4rT7hmDrIU7.K9LYSl2OiOXtpMS.","fullname":"pipe","roles":[]}
+//
+
+
+
+

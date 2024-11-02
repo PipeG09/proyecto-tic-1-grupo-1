@@ -20,6 +20,4 @@ public interface UserService {
 
     boolean validate(User user, String password);
 
-
-
 }
