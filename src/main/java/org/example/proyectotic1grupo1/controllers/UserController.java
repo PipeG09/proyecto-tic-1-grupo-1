@@ -40,10 +40,10 @@ public class UserController {
 
 
 
-    @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
-        User user = userService.findByUsername(username);
-        boolean isAuth = userService.validate(user,password);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDto userDto,Model model) {
+        User user = userService.findByUsername(userDto.getUsername());
+        boolean isAuth = userService.validate(user,userDto.getPassword());
         if (isAuth) {
             model.addAttribute("user", user);
             model.addAttribute("isAuthenticated", true);

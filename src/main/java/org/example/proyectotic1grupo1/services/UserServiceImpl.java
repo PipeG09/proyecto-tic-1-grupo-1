@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserProfile(String username, UserDto userDto) {
+    public void updateUserProfile(String username, User userDto) {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
@@ -76,36 +76,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
-
-    @Override
-    public void updateUserById(Long id, UserDto userDto) throws Exception {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found"));
-
-        user.setFullname(userDto.getFullname());
-
-        // Si el administrador proporciona una nueva contraseña, la ciframos y la actualizamos
-        if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        }
-
-        // Actualizar roles
-        if (userDto.getRoleIds() != null && !userDto.getRoleIds().isEmpty()) {
-            List<Role> roles = roleRepository.findAllById(userDto.getRoleIds());
-            user.setRoles(new HashSet<>(roles));
-        }
-
-        userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUserById(Long id) throws Exception {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found"));
-
-        userRepository.delete(user);
-    }
 
 
     @Override
