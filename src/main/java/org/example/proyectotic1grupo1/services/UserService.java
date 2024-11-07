@@ -10,13 +10,12 @@ public interface UserService {
 
     User save(User user);
 
-    void updateUserProfile(String username, User userDto) throws Exception;
+    void updateUserProfile(String username, User userDto) throws RuntimeException;
 
     User findById(Long id) throws Exception;
 
     List<User> findAll();
 
-    boolean isAdmin(User user);
 
     boolean validate(User user, String password);
 

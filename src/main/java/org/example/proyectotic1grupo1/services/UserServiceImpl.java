@@ -36,11 +36,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    public boolean isAdmin(User user) {
-        return user.getRoles().stream()
-                .anyMatch(role -> role.getName().equalsIgnoreCase("ADMIN") || role.getName().equalsIgnoreCase("ROLE_ADMIN"));
-
-    }
 
 
 
