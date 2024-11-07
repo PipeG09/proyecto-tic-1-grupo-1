@@ -21,6 +21,15 @@ public class Screening {
     @Column(name="date")
     private LocalDateTime date;
 
+
+    @ManyToOne
+    @JoinColumn(name = "venueId",insertable = false, updatable = false)
+    private Venue venue;
+
+    @ManyToOne
+    @JoinColumn(name = "movieId",  insertable = false, updatable = false)
+    private Movie movie;
+
     public Screening() {
     }
 
