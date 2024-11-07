@@ -1,46 +1,49 @@
-// src/pages/Login.js
-import React, { useContext } from 'react';
+// src/pages/Registro.js
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { useHistory } from 'react-router-dom';
 
-function Login() {
+function Registro() {
     const history = useHistory();
-    const { iniciarSesion } = useContext(AuthContext);
 
     const initialValues = {
+        fullname: '',
         username: '',
         password: '',
     };
 
     const validationSchema = Yup.object({
-        username: Yup.string().required('El nombre de usuario es obligatorio'),
-        password: Yup.string().required('La contraseña es obligatoria'),
+        fullname: Yup.string()
+            .required('El nombre completo es obligatorio'),
+        username: Yup.string()
+            .required('El nombre de usuario es obligatorio'),
+        password: Yup.string()
+            .min(6, 'La contraseña debe tener al menos 6 caracteres')
+            .required('La contraseña es obligatoria'),
     });
 
     const onSubmit = (values, { setSubmitting, setFieldError }) => {
         axios
-            .post('/api/user/login', {
+            .post('/api/user/register', {
+                fullname: values.fullname,
                 username: values.username,
                 password: values.password,
             })
             .then((response) => {
-                // Inicio de sesión exitoso
-                iniciarSesion(response.data); // Actualiza el contexto de autenticación
-                history.push('/'); // Redirige a la página principal
+                // Registro exitoso
+                alert('Registro exitoso. Por favor, inicia sesión.');
+                history.push('/login');
             })
             .catch((error) => {
                 setSubmitting(false);
                 if (error.response) {
                     // El backend respondió con un código de estado distinto de 2xx
                     if (error.response.status === 400) {
-                        setFieldError('password', 'Contraseña incorrecta');
-                    } else if (error.response.status === 404) {
-                        setFieldError('username', 'El usuario no existe');
+                        setFieldError('username', 'El nombre de usuario ya existe');
                     } else {
-                        alert('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+                        alert('Error al registrar. Por favor, inténtalo de nuevo.');
                     }
                 } else {
                     // El backend no respondió o ocurrió un error al configurar la solicitud
@@ -51,7 +54,7 @@ function Login() {
 
     return (
         <div className="container mt-4">
-            <h2>Iniciar Sesión</h2>
+            <h2>Registro</h2>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -59,6 +62,20 @@ function Login() {
             >
                 {({ isSubmitting }) => (
                     <Form>
+                        <div className="form-group">
+                            <label htmlFor="fullname">Nombre Completo</label>
+                            <Field
+                                type="text"
+                                id="fullname"
+                                name="fullname"
+                                className="form-control"
+                            />
+                            <ErrorMessage
+                                name="fullname"
+                                component="div"
+                                className="text-danger"
+                            />
+                        </div>
                         <div className="form-group">
                             <label htmlFor="username">Nombre de Usuario</label>
                             <Field
@@ -92,16 +109,13 @@ function Login() {
                             className="btn btn-primary"
                             disabled={isSubmitting}
                         >
-                            Iniciar Sesión
+                            Registrarse
                         </button>
                     </Form>
                 )}
             </Formik>
-            <p className="mt-3">
-                ¿No tienes una cuenta? <Link to="/registro">Regístrate aquí</Link>
-            </p>
         </div>
     );
 }
 
-export default Login;
+export default Registro;
