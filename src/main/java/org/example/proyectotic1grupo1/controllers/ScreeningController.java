@@ -1,6 +1,7 @@
 package org.example.proyectotic1grupo1.controllers;
 
 import org.example.proyectotic1grupo1.models.Screening;
+import org.example.proyectotic1grupo1.models.Venue;
 import org.example.proyectotic1grupo1.services.ScreeningServiceImpl;
 import org.example.proyectotic1grupo1.services.UserSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,36 @@ public class ScreeningController {
         }
     }
 
+    @GetMapping("/{venue_id}")
+    public ResponseEntity<?> getScreeningByVenueId(@PathVariable Long venue_id) {
+        List<Screening> screenings = null;
+        try {
+            screenings = screeningService.findByVenueId(venue_id);
+            return ResponseEntity.ok(screenings);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/venues/{movieId}")
+    public ResponseEntity<?> getVenuesByMovieId(@PathVariable Long movieId) {
+        try {
+            List<Venue> venues = screeningService.findVenueByMovieId(movieId);
+            return ResponseEntity.ok(venues);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/screenings/{venueId}/{moiveId}")
+    public ResponseEntity<?> getScreeningsByVenueAndMoiveId(@PathVariable Long venueId, @PathVariable Long moiveId) {
+        try {
+            List<Screening> screenings = screeningService.findByVenueMovie(venueId, moiveId);
+            return ResponseEntity.ok(screenings);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
 

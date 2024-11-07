@@ -1,9 +1,11 @@
 package org.example.proyectotic1grupo1.services;
 
 import org.example.proyectotic1grupo1.models.Screening;
+import org.example.proyectotic1grupo1.models.Venue;
 import org.example.proyectotic1grupo1.repositories.ScreeningRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -49,5 +51,23 @@ public class ScreeningServiceImpl implements ScreeningService {
                 .orElseThrow(() -> new Exception("Screening not found"));
 
         screeningRepository.delete(screening);
+    }
+
+    @Override
+    public List<Screening> findByVenueId(long venueId) {
+        return screeningRepository.findByVenueIdAndDateAfter(venueId, LocalDateTime.now());
+
+    }
+
+    @Override
+    public List<Venue> findVenueByMovieId(long movieId) {
+        LocalDateTime date = LocalDateTime.now();
+        return screeningRepository.findDistinctVenuesByMovieIdAndTimeAfter(movieId,date);
+    }
+
+    @Override
+    public List<Screening> findByVenueMovie(long venueId, long movieId) {
+        return screeningRepository.findByVenueIdAndMovieIdAndDateAfter(venueId,movieId,LocalDateTime.now());
+
     }
 }
