@@ -18,6 +18,9 @@ public class Movie {
     @Column(name = "duration",nullable=false)
     int duration ;
 
+    @Column(name="image",nullable = false)
+    String image ;
+
     public Movie(String title, String description, String genre, int duration) {
         this.title = title;
         this.description = description;
@@ -26,6 +29,14 @@ public class Movie {
     }
 
     public Movie() {
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getTitle() {
