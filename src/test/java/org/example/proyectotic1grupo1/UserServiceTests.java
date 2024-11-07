@@ -1,9 +1,7 @@
 package org.example.proyectotic1grupo1;
 
 import org.example.proyectotic1grupo1.dto.UserDto;
-import org.example.proyectotic1grupo1.models.Role;
 import org.example.proyectotic1grupo1.models.User;
-import org.example.proyectotic1grupo1.repositories.RoleRepository;
 import org.example.proyectotic1grupo1.repositories.UserRepository;
 import org.example.proyectotic1grupo1.services.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

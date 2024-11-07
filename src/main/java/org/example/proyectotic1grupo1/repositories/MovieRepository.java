@@ -4,4 +4,6 @@ import org.example.proyectotic1grupo1.models.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+    Movie findByTitle(String title);
+    Movie findByMovieId(Long movieId);
 }

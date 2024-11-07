@@ -21,8 +21,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie findById(Long id) {
-        Optional<Movie> movie = movieRepository.findById(id);
-        return movie.orElse(null);
+        return movieRepository.findByMovieId(id);
     }
 
     @Override

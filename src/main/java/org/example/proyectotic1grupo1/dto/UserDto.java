@@ -1,11 +1,5 @@
 package org.example.proyectotic1grupo1.dto;
 
-import org.example.proyectotic1grupo1.models.User;
-import org.example.proyectotic1grupo1.models.Role;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class UserDto {
 
         private String username;

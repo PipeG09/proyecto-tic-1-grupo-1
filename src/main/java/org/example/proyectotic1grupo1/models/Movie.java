@@ -9,6 +9,7 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long movieId;
+
     @Column(name="title", nullable=false)
     String title ;
     @Column(name = "description")
@@ -18,7 +19,7 @@ public class Movie {
     @Column(name = "duration",nullable=false)
     int duration ;
 
-    @Column(name="image",nullable = false)
+    @Column(name="image",columnDefinition = "TEXT")
     String image ;
 
     public Movie(String title, String description, String genre, int duration) {

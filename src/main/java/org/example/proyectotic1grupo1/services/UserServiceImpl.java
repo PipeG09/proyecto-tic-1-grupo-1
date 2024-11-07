@@ -1,19 +1,12 @@
 package org.example.proyectotic1grupo1.services;
 
-import org.example.proyectotic1grupo1.dto.UserDto;
-import org.example.proyectotic1grupo1.models.Role;
 import org.example.proyectotic1grupo1.models.User;
-import org.example.proyectotic1grupo1.repositories.RoleRepository;
 import org.example.proyectotic1grupo1.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -25,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) { // Añadir RoleRepository aquí
+    public UserServiceImpl(UserRepository userRepository) { // Añadir RoleRepository aquí
         super();
         this.userRepository = userRepository;
 
