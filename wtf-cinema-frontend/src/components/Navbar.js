@@ -1,11 +1,11 @@
 // src/components/Navbar.js
 import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 function Navbar() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { usuario, cerrarSesion } = useContext(AuthContext);
 
     const handleLogout = () => {
@@ -13,7 +13,7 @@ function Navbar() {
             .get('/api/user/logout')
             .then(() => {
                 cerrarSesion();
-                history.push('/login');
+                navigate('/login');
             })
             .catch((error) => {
                 console.error('Error al cerrar sesión:', error);

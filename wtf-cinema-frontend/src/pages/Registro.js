@@ -3,10 +3,10 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Registro() {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const initialValues = {
         fullname: '',
@@ -34,7 +34,7 @@ function Registro() {
             .then((response) => {
                 // Registro exitoso
                 alert('Registro exitoso. Por favor, inicia sesión.');
-                history.push('/login');
+                navigate('/login');
             })
             .catch((error) => {
                 setSubmitting(false);

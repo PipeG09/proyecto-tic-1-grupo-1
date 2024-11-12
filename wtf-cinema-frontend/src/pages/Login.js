@@ -3,11 +3,11 @@ import React, { useContext } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 function Login() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { iniciarSesion } = useContext(AuthContext);
 
     const initialValues = {
@@ -29,7 +29,7 @@ function Login() {
             .then((response) => {
                 // Inicio de sesión exitoso
                 iniciarSesion(response.data); // Actualiza el contexto de autenticación
-                history.push('/'); // Redirige a la página principal
+                navigate('/'); // Redirige a la página principal
             })
             .catch((error) => {
                 setSubmitting(false);
