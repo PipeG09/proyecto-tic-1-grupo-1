@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/api/**") // Ignorar CSRF para las API
                 )
+
                 .authorizeHttpRequests(authz -> authz
                         .anyRequest().permitAll() // Permitir acceso a todas las solicitudes
                 )

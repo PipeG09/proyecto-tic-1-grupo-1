@@ -15,10 +15,8 @@ function Registro() {
     };
 
     const validationSchema = Yup.object({
-        fullname: Yup.string()
-            .required('El nombre completo es obligatorio'),
-        username: Yup.string()
-            .required('El nombre de usuario es obligatorio'),
+        fullname: Yup.string().required('El nombre completo es obligatorio'),
+        username: Yup.string().required('El nombre de usuario es obligatorio'),
         password: Yup.string()
             .min(6, 'La contraseña debe tener al menos 6 caracteres')
             .required('La contraseña es obligatoria'),
@@ -26,11 +24,7 @@ function Registro() {
 
     const onSubmit = (values, { setSubmitting, setFieldError }) => {
         axios
-            .post('/api/user/register', {
-                fullname: values.fullname,
-                username: values.username,
-                password: values.password,
-            })
+            .post('http://localhost:8080/api/user/register', values)
             .then((response) => {
                 // Registro exitoso
                 alert('Registro exitoso. Por favor, inicia sesión.');

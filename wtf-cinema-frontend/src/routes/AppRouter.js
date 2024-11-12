@@ -1,6 +1,8 @@
 // src/routes/AppRouter.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import Home from '../pages/Home';
 import Cartelera from '../pages/Cartelera';
 import Reserva from '../pages/Reserva';
@@ -11,6 +13,8 @@ import Perfil from '../pages/Perfil';
 import PrivateRoute from './PrivateRoute';
 
 function AppRouter() {
+    const { usuario } = useContext(AuthContext);
+
     return (
         <Router>
             <Routes>
@@ -19,17 +23,20 @@ function AppRouter() {
                 <Route path="/registro" element={<Registro />} />
 
                 {/* Rutas privadas */}
-                <Route element={<PrivateRoute />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/cartelera" element={<Cartelera />} />
-                    <Route path="/reserva" element={<Reserva />} />
-                    <Route path="/mis-reservas" element={<MisReservas />} />
-                    <Route path="/perfil" element={<Perfil />} />
-                    {/* Otras rutas privadas */}
-                </Route>
-
-                {/* Ruta por defecto */}
-                <Route path="*" element={<Login />} />
+                {usuario ? (
+                    <>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/cartelera" element={<Cartelera />} />
+                        <Route path="/reserva" element={<Reserva />} />
+                        <Route path="/mis-reservas" element={<MisReservas />} />
+                        <Route path="/perfil" element={<Perfil />} />
+                    </>
+                ) : (
+                    <>
+                        {/* Redireccionar todas las rutas privadas al login */}
+                        <Route path="*" element={<Navigate to="/login" replace />} />
+                    </>
+                )}
             </Routes>
         </Router>
     );

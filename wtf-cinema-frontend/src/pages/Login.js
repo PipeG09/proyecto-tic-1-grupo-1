@@ -22,10 +22,7 @@ function Login() {
 
     const onSubmit = (values, { setSubmitting, setFieldError }) => {
         axios
-            .post('/api/user/login', {
-                username: values.username,
-                password: values.password,
-            })
+            .post('http://localhost:8080/api/user/login', values)
             .then((response) => {
                 // Inicio de sesión exitoso
                 iniciarSesion(response.data); // Actualiza el contexto de autenticación

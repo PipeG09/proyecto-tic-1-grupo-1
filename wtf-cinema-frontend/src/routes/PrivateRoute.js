@@ -5,7 +5,12 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 const PrivateRoute = () => {
-    const { usuario } = useContext(AuthContext);
+    const { usuario, loading } = useContext(AuthContext);
+
+    if (loading) {
+        return <div>Cargando...</div>; // O un componente de carga
+    }
+
     return usuario ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

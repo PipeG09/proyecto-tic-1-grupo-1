@@ -4,15 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AuthProvider from './context/AuthContext';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
-ReactDOM.render(
-    <AuthProvider>
-        <App />
-    </AuthProvider>,
-    document.getElementById('root')
-);
+axios.defaults.withCredentials = true;
+
+
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

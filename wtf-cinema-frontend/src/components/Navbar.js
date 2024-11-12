@@ -2,21 +2,15 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
 
 function Navbar() {
     const navigate = useNavigate();
     const { usuario, cerrarSesion } = useContext(AuthContext);
 
     const handleLogout = () => {
-        axios
-            .get('/api/user/logout')
+        cerrarSesion()
             .then(() => {
-                cerrarSesion();
                 navigate('/login');
-            })
-            .catch((error) => {
-                console.error('Error al cerrar sesión:', error);
             });
     };
 
