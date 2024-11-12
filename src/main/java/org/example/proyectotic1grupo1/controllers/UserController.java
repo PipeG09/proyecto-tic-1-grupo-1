@@ -59,11 +59,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user, Model model) {
-        // Same as PreAuthorize("loggedIn()")
-        if (!userSessionService.loggedIn()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
-        }
-
         User user2 = userService.save(user);
         if (user == null) {
             return ResponseEntity.badRequest().body("User Already Exists");
