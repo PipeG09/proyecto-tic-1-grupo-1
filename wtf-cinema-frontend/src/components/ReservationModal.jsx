@@ -6,12 +6,14 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
     const [selectedVenue, setSelectedVenue] = useState(null);
     const [screenings, setScreenings] = useState([]);
     const [selectedScreening, setSelectedScreening] = useState(null);
-    const [seatMatrix, setSeatMatrix] = useState(null);
+    const [seatMatrix, setSeatMatrix] = useState(Array(15).fill().map(() => Array(10).fill(0)));
     const [selectedSeat, setSelectedSeat] = useState(null);
     const [step, setStep] = useState(1);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [selectedSeats, setSelectedSeats] = useState([]); // Cambiamos selectedSeat por un array
+    const [maxSeats] = useState(6); // Máximo de asientos por reserva
 
     useEffect(() => {
         if (isOpen && movie?.movieId) {
@@ -76,11 +78,12 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         setError(null);
         try {
             console.log('Fetching screenings for venue:', venueId, 'and movie:', movie.movieId);
-            const response = await fetch(`/api/screenings/screenings/${venueId}/${movie.movieId}`);
-            console.log('Screenings response:', response);
+            const response = await fetch(`/api/screenings/screenings/${venueId}/${movie.movieId}`, {
+                credentials: 'include'
+            });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error('Error al cargar las funciones disponibles');
             }
 
             const data = await response.json();
@@ -101,55 +104,99 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         setStep(2);
     };
 
-    const handleScreeningSelect = (screening) => {
+    const handleScreeningSelect = async (screening) => {
+        console.log('Selected screening:', screening);
         setSelectedScreening(screening);
         setStep(3);
-        // Inicializar una matriz vacía 15x10
-        const emptyMatrix = Array(15).fill().map(() => Array(10).fill(0));
-        setSeatMatrix(emptyMatrix);
+
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/reservations/reservations/${screening.screeningId}`, {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al cargar la disponibilidad de asientos');
+            }
+
+            const occupationMatrix = await response.json();
+            console.log('Occupation matrix:', occupationMatrix);
+
+            if (Array.isArray(occupationMatrix) && occupationMatrix.length === 15) {
+                setSeatMatrix(occupationMatrix);
+            } else {
+                throw new Error('Formato de matriz inválido');
+            }
+        } catch (error) {
+            console.error('Error fetching seat matrix:', error);
+            setError('Error al cargar la disponibilidad de asientos');
+            setSeatMatrix(Array(15).fill().map(() => Array(10).fill(0)));
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSeatSelect = (row, col) => {
-        if (seatMatrix[row][col] === 0) {
-            setSelectedSeat({ row, col });
+        if (seatMatrix[row][col] === 0) { // Si el asiento está disponible
+            // Buscar si el asiento ya está seleccionado
+            const seatIndex = selectedSeats.findIndex(
+                seat => seat.row === row && seat.col === col
+            );
+
+            if (seatIndex !== -1) {
+                // Si el asiento ya está seleccionado, lo quitamos
+                setSelectedSeats(prev => prev.filter((_, index) => index !== seatIndex));
+            } else if (selectedSeats.length < maxSeats) {
+                // Si no está seleccionado y no hemos alcanzado el máximo, lo agregamos
+                setSelectedSeats(prev => [...prev, { row, col }]);
+            } else {
+                setError(`No puedes seleccionar más de ${maxSeats} asientos por reserva`);
+            }
         }
     };
 
     const handleConfirmReservation = async () => {
-        if (!selectedScreening || !selectedSeat || !currentUser) {
-            setError('Falta información necesaria para la reserva');
+        if (!selectedScreening || selectedSeats.length === 0 || !currentUser) {
+            setError('Selecciona al menos un asiento para continuar');
             return;
         }
 
         try {
-            const response = await fetch(`/api/reservations/${selectedScreening.screeningId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    screeningId: selectedScreening.screeningId,
-                    userId: currentUser.id,
-                    seatRow: selectedSeat.row,
-                    seatColumn: selectedSeat.col
-                }),
-            });
+            // Crear un array de promesas para todas las reservas
+            const reservationPromises = selectedSeats.map(seat =>
+                fetch(`/api/reservations/${selectedScreening.screeningId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        screeningId: selectedScreening.screeningId,
+                        userId: currentUser.id,
+                        seatRow: seat.row,
+                        seatColumn: seat.col
+                    }),
+                })
+            );
 
-            const responseText = await response.text();
-            console.log('Server response:', responseText);
+            // Esperar a que todas las reservas se completen
+            const responses = await Promise.all(reservationPromises);
 
-            if (response.ok) {
+            // Verificar si todas las reservas fueron exitosas
+            const allSuccessful = responses.every(response => response.ok);
+
+            if (allSuccessful) {
                 onClose();
-                alert('¡Reserva realizada con éxito!');
+                alert('¡Reservas realizadas con éxito!');
             } else {
-                throw new Error(responseText || 'Error al crear la reserva');
+                throw new Error('Error al crear algunas reservas');
             }
         } catch (error) {
-            console.error('Error making reservation:', error);
-            setError(error.message || 'Error al crear la reserva');
+            console.error('Error making reservations:', error);
+            setError(error.message || 'Error al crear las reservas');
         }
     };
+
 
     if (!isOpen) return null;
 
@@ -227,43 +274,115 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
                             </div>
                         )}
 
-                        {step === 3 && seatMatrix && (
+                        {step === 3 && (
                             <div>
-                                <h3 className="text-lg font-semibold mb-2">Selecciona tu asiento:</h3>
+                                <h3 className="text-lg font-semibold mb-2">
+                                    Selecciona tus asientos:
+                                    <span className="text-sm text-gray-600 ml-2">
+                    ({selectedSeats.length}/{maxSeats} seleccionados)
+                  </span>
+                                </h3>
                                 <div className="overflow-x-auto">
-                                    <div className="grid grid-cols-10 gap-1 mb-4 w-fit mx-auto">
+                                    <div className="flex flex-col items-center space-y-1">
+                                        {/* Números de columna */}
+                                        <div className="flex space-x-1 mb-2 pl-6">
+                                            {[...Array(10)].map((_, index) => (
+                                                <div key={index} className="w-8 h-8 flex items-center justify-center text-xs text-gray-600">
+                                                    {index + 1}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Filas de asientos */}
                                         {seatMatrix.map((row, rowIndex) => (
-                                            <div key={rowIndex} className="contents">
-                                                {row.map((seat, colIndex) => (
-                                                    <button
-                                                        key={`${rowIndex}-${colIndex}`}
-                                                        className={`
-                              w-8 h-8 rounded flex items-center justify-center text-xs
-                              ${seat === 0
-                                                            ? selectedSeat?.row === rowIndex && selectedSeat?.col === colIndex
-                                                                ? 'bg-blue-500 text-white'
-                                                                : 'bg-green-200 hover:bg-blue-200'
-                                                            : 'bg-red-200 cursor-not-allowed'
-                                                        }
-                            `}
-                                                        onClick={() => handleSeatSelect(rowIndex, colIndex)}
-                                                        disabled={seat === 1}
-                                                    >
-                                                        {`${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`}
-                                                    </button>
-                                                ))}
+                                            <div key={rowIndex} className="flex items-center">
+                                                {/* Letra de la fila */}
+                                                <div className="w-6 text-center text-xs text-gray-600 font-semibold mr-2">
+                                                    {String.fromCharCode(65 + rowIndex)}
+                                                </div>
+
+                                                {/* Asientos */}
+                                                <div className="flex space-x-1">
+                                                    {row.map((isOccupied, colIndex) => (
+                                                        <button
+                                                            key={`${rowIndex}-${colIndex}`}
+                                                            className={`
+                                w-8 h-8 rounded flex items-center justify-center text-xs
+                                ${isOccupied === 1
+                                                                ? 'bg-red-200 cursor-not-allowed text-gray-600'
+                                                                : selectedSeats.some(seat => seat.row === rowIndex && seat.col === colIndex)
+                                                                    ? 'bg-blue-500 text-white'
+                                                                    : 'bg-green-200 hover:bg-blue-200 text-gray-800'
+                                                            }
+                              `}
+                                                            onClick={() => handleSeatSelect(rowIndex, colIndex)}
+                                                            disabled={isOccupied === 1}
+                                                            title={`Fila ${String.fromCharCode(65 + rowIndex)} - Asiento ${colIndex + 1}${
+                                                                isOccupied === 1 ? ' (Ocupado)' : ''
+                                                            }`}
+                                                        >
+                                                            {colIndex + 1}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
                                 </div>
 
-                                {selectedSeat && (
-                                    <button
-                                        onClick={handleConfirmReservation}
-                                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-                                    >
-                                        Confirmar Reserva
-                                    </button>
+                                {/* Lista de asientos seleccionados */}
+                                {selectedSeats.length > 0 && (
+                                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                                        <h4 className="font-semibold mb-2">Asientos seleccionados:</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedSeats.map((seat, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex items-center bg-blue-100 px-2 py-1 rounded"
+                                                >
+                          <span className="text-sm">
+                            Fila {String.fromCharCode(65 + seat.row)} -
+                            Asiento {seat.col + 1}
+                          </span>
+                                                    <button
+                                                        onClick={() => handleSeatSelect(seat.row, seat.col)}
+                                                        className="ml-2 text-red-500 hover:text-red-700"
+                                                        title="Eliminar selección"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Leyenda */}
+                                <div className="mt-6 flex justify-center space-x-6">
+                                    <div className="flex items-center">
+                                        <div className="w-4 h-4 bg-green-200 rounded mr-2"></div>
+                                        <span className="text-sm">Disponible</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <div className="w-4 h-4 bg-blue-500 rounded mr-2"></div>
+                                        <span className="text-sm">Seleccionado</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <div className="w-4 h-4 bg-red-200 rounded mr-2"></div>
+                                        <span className="text-sm">Ocupado</span>
+                                    </div>
+                                </div>
+
+                                {/* Botón de confirmación */}
+                                {selectedSeats.length > 0 && (
+                                    <div className="mt-6">
+                                        <button
+                                            onClick={handleConfirmReservation}
+                                            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+                                        >
+                                            Confirmar {selectedSeats.length} {selectedSeats.length === 1 ? 'Reserva' : 'Reservas'}
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         )}

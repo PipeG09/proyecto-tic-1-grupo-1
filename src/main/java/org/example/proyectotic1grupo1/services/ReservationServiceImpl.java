@@ -23,28 +23,31 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<List<Integer>> ocupationMatrix(Screening screening){
-        // Inicialize the ocupation matrix
+    public List<List<Integer>> ocupationMatrix(Screening screening) {
+        // Inicializar la matriz de ocupación (15 filas x 10 columnas)
         List<List<Integer>> ocupation_matrix = new ArrayList<>();
-        for (int i = 0; i<10; i++){
+        // Crear 15 filas
+        for (int i = 0; i < 15; i++) {
             List<Integer> fila = new ArrayList<>();
-            for (int j = 0; j<15;j++){
+            // Cada fila tiene 10 asientos
+            for (int j = 0; j < 10; j++) {
                 fila.add(0);
             }
             ocupation_matrix.add(fila);
         }
 
-        // Fill it
-            List<Reservation> occupied_seats = reservationsRepository.findAllByScreeningId(screening.getScreeningId());
+        // Obtener las reservas existentes
+        List<Reservation> occupied_seats = reservationsRepository.findAllByScreeningId(screening.getScreeningId());
 
-        // Thought of adding a try catch, but the function is for internal use so i assume it will always be called
-        // with valid parameters
-
-        for (Reservation occupiedSeat : occupied_seats) { // iterate through the reservations
-            ocupation_matrix.get(occupiedSeat.getSeatRow()).set(occupiedSeat.getSeatColumn(), 1);
-            // I change the row corresponding to the seatRow and set the seatColumn to 1
+        // Marcar los asientos ocupados
+        for (Reservation occupiedSeat : occupied_seats) {
+            int row = occupiedSeat.getSeatRow();
+            int col = occupiedSeat.getSeatColumn();
+            // Verificar que los índices estén dentro de los límites
+            if (row >= 0 && row < 15 && col >= 0 && col < 10) {
+                ocupation_matrix.get(row).set(col, 1);
+            }
         }
-
 
         return ocupation_matrix;
     }
