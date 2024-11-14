@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.example.proyectotic1grupo1.models.Reservation;
 import org.example.proyectotic1grupo1.models.Screening;
@@ -51,10 +52,16 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public int reserveSeats(Reservation reservation){
-        try {reservationsRepository.save(reservation);
-            return 1;
+        Reservation res = this.findById(reservation.getReservationId());
+        if (res == null) {
+            try {
+                reservationsRepository.save(reservation);
+                return 1;
+            } catch (Exception e) {
+                return -1;
+            }
         }
-        catch(Exception e){
+        else{
             return -1;
         }
 

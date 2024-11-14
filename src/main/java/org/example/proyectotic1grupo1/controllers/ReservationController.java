@@ -136,4 +136,19 @@ public class ReservationController {
         }
         return ResponseEntity.badRequest().build();
     }
+
+
+
+    @GetMapping("/reservations/{screeningId}")
+    public ResponseEntity<?> getReservation(@PathVariable Long screeningId) {
+        Screening screening = null;
+        try {
+            screening = screeningService.findById(screeningId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<List<Integer>> occupation = reservationService.ocupationMatrix(screening);
+        return ResponseEntity.ok(occupation);
+    }
 }

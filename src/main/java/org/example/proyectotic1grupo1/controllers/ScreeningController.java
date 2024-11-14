@@ -65,10 +65,10 @@ public class ScreeningController {
         }
     }
 
-    @GetMapping("/screenings/{venueId}/{moiveId}")
-    public ResponseEntity<?> getScreeningsByVenueAndMoiveId(@PathVariable Long venueId, @PathVariable Long moiveId) {
+    @GetMapping("/screenings/{venueId}/{movieId}")
+    public ResponseEntity<?> getScreeningsByVenueAndMovieId(@PathVariable Long venueId, @PathVariable Long movieId) {
         try {
-            List<Screening> screenings = screeningService.findByVenueMovie(venueId, moiveId);
+            List<Screening> screenings = screeningService.findByVenueMovie(venueId, movieId);
             return ResponseEntity.ok(screenings);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
