@@ -11,53 +11,60 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
     const [step, setStep] = useState(1);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
-        if (isOpen && movie) {
-            console.log('Modal opened with movie:', movie);
-            console.log('Movie ID:', movie.movieId);
+        if (isOpen && movie?.movieId) {
             fetchVenues();
+            fetchCurrentUser();
+            // Reset states when modal opens
+            setSelectedVenue(null);
+            setSelectedScreening(null);
+            setSelectedSeat(null);
+            setStep(1);
+            setError(null);
         }
     }, [isOpen, movie]);
 
-    const fetchVenues = async () => {
-        if (!movie) {
-            console.error('No movie provided to fetch venues');
-            return;
+    const fetchCurrentUser = async () => {
+        try {
+            const response = await fetch('/api/user/profile', {
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const user = await response.json();
+                setCurrentUser(user);
+            }
+        } catch (error) {
+            console.error('Error fetching current user:', error);
         }
+    };
+
+    const fetchVenues = async () => {
+        if (!movie?.movieId) return;
 
         setLoading(true);
         setError(null);
         try {
-            // Agregamos los headers necesarios
-            const response = await fetch(`/api/screenings/venues/${movie.movieId}`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include' // Importante para las cookies de sesión
-            });
-
-            console.log('Full response:', response);
+            console.log('Fetching venues for movie:', movie.movieId);
+            const response = await fetch(`/api/screenings/venues/${movie.movieId}`);
+            console.log('Venues response:', response);
 
             if (!response.ok) {
-                const textResponse = await response.text();
-                console.error('Error response text:', textResponse);
-                throw new Error(`HTTP error! status: ${response.status}, message: ${textResponse}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log('Venues data received:', data);
+            console.log('Venues data:', data);
 
             if (Array.isArray(data)) {
                 setVenues(data);
             } else {
-                console.error('Received non-array data for venues:', data);
+                console.error('Venues data is not an array:', data);
                 setVenues([]);
             }
         } catch (error) {
-            console.error('Detailed fetch venues error:', error);
+            console.error('Error fetching venues:', error);
             setError('Error al cargar los cines disponibles');
         } finally {
             setLoading(false);
@@ -109,30 +116,38 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
     };
 
     const handleConfirmReservation = async () => {
-        if (!selectedScreening || !selectedSeat) return;
+        if (!selectedScreening || !selectedSeat || !currentUser) {
+            setError('Falta información necesaria para la reserva');
+            return;
+        }
 
         try {
-            const response = await fetch('/api/reservations/' + selectedScreening.screeningId, {
+            const response = await fetch(`/api/reservations/${selectedScreening.screeningId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     screeningId: selectedScreening.screeningId,
+                    userId: currentUser.id,
                     seatRow: selectedSeat.row,
                     seatColumn: selectedSeat.col
                 }),
             });
 
+            const responseText = await response.text();
+            console.log('Server response:', responseText);
+
             if (response.ok) {
                 onClose();
-                alert('Reserva realizada con éxito!'); // Podrías usar un sistema de notificaciones más elegante
+                alert('¡Reserva realizada con éxito!');
             } else {
-                throw new Error('Error al crear la reserva');
+                throw new Error(responseText || 'Error al crear la reserva');
             }
         } catch (error) {
             console.error('Error making reservation:', error);
-            setError('Error al crear la reserva');
+            setError(error.message || 'Error al crear la reserva');
         }
     };
 
@@ -142,9 +157,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">
-                        {movie ? `${movie.title} (ID: ${movie.movieId})` : 'Cargando...'}
-                    </h2>
+                    <h2 className="text-2xl font-bold">{movie.title}</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-500 hover:text-gray-700"
@@ -156,17 +169,12 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
                 {error && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {error}
-                        <pre className="text-xs mt-2">
-              Debug info:
-              Movie ID: {movie?.movieId}
-                            Venues count: {venues.length}
-            </pre>
                     </div>
                 )}
 
                 {loading ? (
                     <div className="text-center py-4">
-                        <p>Cargando cines disponibles...</p>
+                        <p>Cargando...</p>
                     </div>
                 ) : (
                     <>

@@ -12,15 +12,20 @@ const ReservationsPage = () => {
 
     const fetchReservations = async () => {
         try {
-            const response = await fetch('/api/reservations/reservations');
-            if (response.ok) {
-                const data = await response.json();
-                setReservations(data);
-            } else {
-                setError('Error al cargar las reservas');
+            const response = await fetch('/api/reservations/reservations', {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al cargar las reservas');
             }
+
+            const data = await response.json();
+            console.log('Reservations data:', data);
+            setReservations(data);
         } catch (error) {
-            setError('Error al conectar con el servidor');
+            console.error('Error fetching reservations:', error);
+            setError('Error al cargar las reservas');
         } finally {
             setLoading(false);
         }
@@ -33,16 +38,17 @@ const ReservationsPage = () => {
 
         try {
             const response = await fetch(`/api/reservations/cancel/${reservationId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             });
 
             if (response.ok) {
-                // Actualizar la lista de reservas
                 fetchReservations();
             } else {
                 setError('Error al cancelar la reserva');
             }
         } catch (error) {
+            console.error('Error canceling reservation:', error);
             setError('Error al conectar con el servidor');
         }
     };
@@ -54,8 +60,12 @@ const ReservationsPage = () => {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return new Intl.DateTimeFormat('es-UY', {
-            dateStyle: 'medium',
-            timeStyle: 'short'
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         }).format(date);
     };
 
@@ -86,52 +96,71 @@ const ReservationsPage = () => {
                     </div>
                 ) : (
                     <div className="grid gap-6">
-                        {reservations.map((reservation) => (
-                            <div
-                                key={reservation.reservationId}
-                                className="bg-white rounded-lg shadow-md overflow-hidden"
-                            >
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                                                {reservation.screening.movie.title}
-                                            </h2>
-                                            <div className="space-y-2 text-gray-600">
-                                                <p>
-                                                    <span className="font-semibold">Cine:</span>{' '}
-                                                    {reservation.screening.venue.neighborhood}
-                                                </p>
-                                                <p>
-                                                    <span className="font-semibold">Fecha y hora:</span>{' '}
-                                                    {formatDate(reservation.screening.date)}
-                                                </p>
-                                                <p>
-                                                    <span className="font-semibold">Asiento:</span>{' '}
-                                                    {formatSeatNumber(reservation.seatRow, reservation.seatColumn)}
-                                                </p>
+                        {reservations.map((reservation) => {
+                            if (!reservation?.screening) {
+                                console.log('Reservation data:', reservation);
+                                return null;
+                            }
+
+                            return (
+                                <div
+                                    key={reservation.reservationId}
+                                    className="bg-white rounded-lg shadow-md overflow-hidden"
+                                >
+                                    <div className="p-6">
+                                        <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                                            <div className="flex-1">
+                                                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                                                    {reservation.screening.movie.title}
+                                                </h2>
+                                                <div className="space-y-3">
+                                                    <div className="flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        <span className="text-gray-600">
+                              {reservation.screening.venue.neighborhood}
+                            </span>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <span className="text-gray-600">
+                              {formatDate(reservation.screening.date)}
+                            </span>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <span className="text-gray-600">
+                              {formatSeatNumber(reservation.seatRow, reservation.seatColumn)}
+                            </span>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <button
+                                                onClick={() => handleCancelReservation(reservation.reservationId)}
+                                                className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition-colors w-full md:w-auto text-center"
+                                            >
+                                                Cancelar Reserva
+                                            </button>
                                         </div>
-                                        <button
-                                            onClick={() => handleCancelReservation(reservation.reservationId)}
-                                            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
-                                        >
-                                            Cancelar Reserva
-                                        </button>
                                     </div>
+                                    {reservation.screening.movie.image && (
+                                        <div className="border-t border-gray-200">
+                                            <img
+                                                src={`data:image/jpeg;base64,${reservation.screening.movie.image}`}
+                                                alt={reservation.screening.movie.title}
+                                                className="w-full h-48 object-cover"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
-                                {/* Agregar una imagen de la película si está disponible */}
-                                {reservation.screening.movie.image && (
-                                    <div className="border-t border-gray-200">
-                                        <img
-                                            src={`data:image/jpeg;base64,${reservation.screening.movie.image}`}
-                                            alt={reservation.screening.movie.title}
-                                            className="w-full h-48 object-cover"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

@@ -2,26 +2,25 @@ package org.example.proyectotic1grupo1.models;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long reservationId;
+    @Column(name = "reservation_id")
+    private Long reservationId;
 
     @Column(name="screeningId")
-    public long screeningId; // foreign
+    private long screeningId;
 
     @Column(name="userId")
-    public long userId;
+    private long userId;
 
     @Column(name = "seatRow")
-    public int seatRow;
+    private int seatRow;
 
     @Column(name = "seatColumn")
-    public int seatColumn;
+    private int seatColumn;
 
     @ManyToOne
     @JoinColumn(name = "screeningId", insertable = false, updatable = false)
@@ -36,13 +35,18 @@ public class Reservation {
 
     public Reservation(long screeningId, long userId, int seatRow, int seatColumn) {
         this.screeningId = screeningId;
-
         this.userId = userId;
         this.seatRow = seatRow;
         this.seatColumn = seatColumn;
     }
 
+    public Long getReservationId() {
+        return reservationId;
+    }
 
+    public void setReservationId(Long reservationId) {
+        this.reservationId = reservationId;
+    }
 
     public long getScreeningId() {
         return screeningId;
