@@ -11,9 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ReservationsRepository extends JpaRepository<Reservation, Long> {
 
-    List<Reservation> findAllByScreening(Screening screening);
+    List<Reservation> findAllByScreeningId(long screeningId);
     List<Reservation> findByUserIdAndScreening_DateAfter(Long userId, LocalDateTime dateTime);
+    Optional<Reservation> findByScreeningIdAndSeatRowAndSeatColumn(long screeningId, long seatRow, long seatColumn);
 }

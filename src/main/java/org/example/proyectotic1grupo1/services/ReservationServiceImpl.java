@@ -35,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         // Fill it
-            List<Reservation> occupied_seats = reservationsRepository.findAllByScreening(screening);
+            List<Reservation> occupied_seats = reservationsRepository.findAllByScreeningId(screening.getScreeningId());
 
         // Thought of adding a try catch, but the function is for internal use so i assume it will always be called
         // with valid parameters
@@ -52,7 +52,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public int reserveSeats(Reservation reservation){
-        Reservation res = this.findById(reservation.getReservationId());
+        Reservation res = this.findRes(reservation);
         if (res == null) {
             try {
                 reservationsRepository.save(reservation);
@@ -88,5 +88,10 @@ public class ReservationServiceImpl implements ReservationService {
     public List<Reservation> findAll(User user) {
         LocalDateTime date = LocalDateTime.now().minusHours(1);
         return reservationsRepository.findByUserIdAndScreening_DateAfter(user.getId(),date);
+    }
+
+    public  Reservation findRes(Reservation reservation){
+
+        return reservationsRepository.findByScreeningIdAndSeatRowAndSeatColumn(reservation.getScreeningId(),reservation.getSeatRow(),reservation.getSeatColumn()).orElse(null);
     }
 }
