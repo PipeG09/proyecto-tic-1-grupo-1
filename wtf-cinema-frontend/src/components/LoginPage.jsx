@@ -1,5 +1,6 @@
 // src/components/LoginPage.jsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -66,9 +67,9 @@ const LoginPage = () => {
                     </div>
                 </form>
                 <div className="text-center">
-                    <a href="/register" className="text-blue-600 hover:text-blue-800">
+                    <Link to="/register" className="text-blue-600 hover:text-blue-800">
                         Create new account
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
