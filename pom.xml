@@ -27,8 +27,11 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<spring-ai.version>1.0.0-M1</spring-ai.version>
+		<!-- Especificamos la codificación de caracteres -->
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>ISO-8859-1</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 
