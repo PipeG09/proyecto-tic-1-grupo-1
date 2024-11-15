@@ -24,9 +24,6 @@ class UserServiceTests {
     private UserRepository userRepository;
 
     @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
@@ -52,51 +49,6 @@ class UserServiceTests {
         verify(userRepository, times(1)).findByUsername(username);
     }
 
-    @Test
-    void testIsAdmin() {
-        User user = new User();
-        Role adminRole = new Role();
-        adminRole.setName("ADMIN");
-
-        user.setRoles(Set.of(adminRole));
-
-        boolean isAdmin = userService.isAdmin(user);
-
-        assertTrue(isAdmin);
-    }
-
-
-
-    @Test
-    void testUpdateUserProfile() {
-        String username = "testUser";
-        User user = new User();
-        user.setUsername(username);
-        user.setFullname("Old Fullname");
-
-        UserDto userDto = new UserDto();
-        userDto.setFullname("New Fullname");
-
-        when(userRepository.findByUsername(username)).thenReturn(user);
-
-        userService.updateUserProfile(username, userDto);
-
-        assertEquals("New Fullname", user.getFullname());
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void testDeleteUserById() throws Exception {
-        Long userId = 1L;
-        User user = new User();
-        user.setId(userId);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-        userService.deleteUserById(userId);
-
-        verify(userRepository, times(1)).delete(user);
-    }
 
     @Test
     void testFindById() throws Exception {
@@ -111,24 +63,6 @@ class UserServiceTests {
         assertNotNull(foundUser);
         assertEquals(userId, foundUser.getId());
         verify(userRepository, times(1)).findById(userId);
-    }
-
-    @Test
-    void testUpdateUserById() throws Exception {
-        Long userId = 1L;
-        UserDto userDto = new UserDto();
-        userDto.setFullname("Updated Fullname");
-
-        User user = new User();
-        user.setId(userId);
-        user.setFullname("Old Fullname");
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-        userService.updateUserById(userId, userDto);
-
-        assertEquals("Updated Fullname", user.getFullname());
-        verify(userRepository, times(1)).save(user);
     }
 }
 

@@ -55,7 +55,7 @@ class ReservationServiceTests {
     void testOcupationMatrix() {
         // Arrange
         List<Reservation> occupiedSeats = Arrays.asList(reservation);
-        when(reservationsRepository.findAllByScreening(screening)).thenReturn(occupiedSeats);
+        when(reservationsRepository.findAllByScreeningId(screening.getScreeningId())).thenReturn(occupiedSeats);
 
         // Act
         List<List<Integer>> result = reservationService.ocupationMatrix(screening);
