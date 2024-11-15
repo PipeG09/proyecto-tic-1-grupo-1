@@ -36,7 +36,7 @@ class VenueServiceTests {
 
         when(venueService.findAll ()).thenReturn(Arrays.asList(venue1, venue2));
 
-        List<Venue> response = venueController.getAllVenues().getBody();
+        List<Venue> response = (List<Venue>) venueController.getAllVenues().getBody();
 
         assertEquals(2, response.size());
         assertEquals(venue1, response.get(0));
@@ -48,7 +48,7 @@ class VenueServiceTests {
         Venue venue = new Venue("Neighbourhood1");
         when(venueService.findById(1L)).thenReturn(venue);
 
-        Venue response = venueController.getVenueById(1L).getBody();
+        Venue response = (Venue) venueController.getVenueById(1L).getBody();
 
         assertEquals(venue, response);
         verify(venueService, times(1)).findById(1L);
