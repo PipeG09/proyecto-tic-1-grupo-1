@@ -14,7 +14,7 @@ const App = () => {
 
     useEffect(() => {
         // Check if user is authenticated
-        fetch('/api/user/profile')
+        fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/user/profile')
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -31,7 +31,7 @@ const App = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('/api/user/logout');
+            const response = await fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/user/logout');
             if (response.ok) {
                 setIsAuthenticated(false);
                 window.location.href = '/login';

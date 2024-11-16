@@ -8,7 +8,7 @@ const MovieSlider = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await fetch('/api/movies/all');
+                const response = await fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/movies/all');
                 if (response.ok) {
                     const allMovies = await response.json();
                     // Get 5 random movies

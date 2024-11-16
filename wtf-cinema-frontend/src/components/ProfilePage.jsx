@@ -9,7 +9,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch('/api/user/profile');
+                const response = await fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/user/profile');
                 if (response.ok) {
                     const userData = await response.json();
                     setUser(userData);

@@ -30,7 +30,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
 
     const fetchCurrentUser = async () => {
         try {
-            const response = await fetch('/api/user/profile', {
+            const response = await fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/user/profile', {
                 credentials: 'include'
             });
             if (response.ok) {
@@ -49,7 +49,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         setError(null);
         try {
             console.log('Fetching venues for movie:', movie.movieId);
-            const response = await fetch(`/api/screenings/venues/${movie.movieId}`);
+            const response = await fetch(`https://proyecto-tic-1-grupo-1.onrender.com/api/screenings/venues/${movie.movieId}`);
             console.log('Venues response:', response);
 
             if (!response.ok) {
@@ -78,7 +78,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         setError(null);
         try {
             console.log('Fetching screenings for venue:', venueId, 'and movie:', movie.movieId);
-            const response = await fetch(`/api/screenings/screenings/${venueId}/${movie.movieId}`, {
+            const response = await fetch(`https://proyecto-tic-1-grupo-1.onrender.com/api/screenings/screenings/${venueId}/${movie.movieId}`, {
                 credentials: 'include'
             });
 
@@ -111,7 +111,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
 
         try {
             setLoading(true);
-            const response = await fetch(`/api/reservations/reservations/${screening.screeningId}`, {
+            const response = await fetch(`https://proyecto-tic-1-grupo-1.onrender.com/api/reservations/reservations/${screening.screeningId}`, {
                 credentials: 'include'
             });
 
@@ -164,7 +164,7 @@ const ReservationModal = ({ isOpen, onClose, movie }) => {
         try {
             // Crear un array de promesas para todas las reservas
             const reservationPromises = selectedSeats.map(seat =>
-                fetch(`/api/reservations/${selectedScreening.screeningId}`, {
+                fetch(`https://proyecto-tic-1-grupo-1.onrender.com/api/reservations/${selectedScreening.screeningId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

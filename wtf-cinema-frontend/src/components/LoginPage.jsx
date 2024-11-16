@@ -1,12 +1,12 @@
 // src/components/LoginPage.jsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const navigate = useNavigate();
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -19,6 +19,7 @@ const LoginPage = () => {
             });
 
             if (response.ok) {
+                navigate("/home")
                 window.location.href = '/home';
             } else {
                 setError('Invalid credentials');
@@ -68,9 +69,9 @@ const LoginPage = () => {
                     </div>
                 </form>
                 <div className="text-center">
-                    <Link to="/register" className="text-blue-600 hover:text-blue-800">
+                    <a href="/register" className="text-blue-600 hover:text-blue-800">
                         Create new account
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>
