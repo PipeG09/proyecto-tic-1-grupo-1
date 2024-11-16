@@ -1,11 +1,12 @@
 // src/components/LoginPage.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
+    const navigate = useNavigate();
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -18,6 +19,7 @@ const LoginPage = () => {
             });
 
             if (response.ok) {
+                navigate("/home")
                 window.location.href = '/home';
             } else {
                 setError('Invalid credentials');

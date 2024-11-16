@@ -12,7 +12,7 @@ const ReservationsPage = () => {
 
     const fetchReservations = async () => {
         try {
-            const response = await fetch('/api/reservations/reservations', {
+            const response = await fetch('https://proyecto-tic-1-grupo-1.onrender.com/api/reservations/reservations', {
                 credentials: 'include'
             });
 
@@ -37,7 +37,7 @@ const ReservationsPage = () => {
         }
 
         try {
-            const response = await fetch(`/api/reservations/cancel/${reservationId}`, {
+            const response = await fetch(`https://proyecto-tic-1-grupo-1.onrender.com/api/reservations/cancel/${reservationId}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
