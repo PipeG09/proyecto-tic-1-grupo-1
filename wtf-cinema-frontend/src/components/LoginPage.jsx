@@ -23,6 +23,7 @@ const LoginPage = () => {
                 setError('Invalid credentials');
             }
         } catch (error) {
+            console.error('Fetch error:', error);
             setError('Error during login');
         }
     };
