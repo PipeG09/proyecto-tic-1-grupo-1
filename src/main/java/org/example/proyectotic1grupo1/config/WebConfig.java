@@ -17,7 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Aplica a todas las rutas
-                .allowedOrigins("https://front-9i2n.onrender.com") // Origen permitido
+                .allowedOrigins("https://w-t-f-cinema.onrender.com") // Origen permitido
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                 .allowedHeaders("*") // Cabeceras permitidas
                 .allowCredentials(true); // Permitir envío de credenciales (cookies)
