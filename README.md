@@ -1,9 +1,5 @@
 # proyecto-tic-1-grupo-1
 Inline-style: 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://github.com/PipeG09/proyecto-tic-1-grupo-1/blob/master/wtfcine.jpeg "LOGO WTF CINEMA")
 
-Reference-style: 
-![alt text][logo]
-
-[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
 # Estructura de Archivos Pronta
